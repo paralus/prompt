@@ -3,7 +3,7 @@ package kube
 import (
 	"testing"
 
-	"github.com/RafaySystems/rafay-prompt/pkg/prompt"
+	"github.com/RafaySystems/ztka/components/prompt/pkg/prompt"
 )
 
 func TestGetPreviousOption(t *testing.T) {

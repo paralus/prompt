@@ -4,7 +4,7 @@ import (
 	"errors"
 	"strings"
 
-	prompt "github.com/RafaySystems/rafay-prompt/pkg/prompt"
+	prompt "github.com/RafaySystems/ztka/components/prompt/pkg/prompt"
 )
 
 func GetOptionsFromHelpText(help string) (options string, err error) {

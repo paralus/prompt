@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"syscall"
 
-	prompt "github.com/RafaySystems/rafay-prompt/pkg/prompt"
-	"github.com/RafaySystems/rafay-prompt/pkg/prompt/internal/term"
+	prompt "github.com/RafaySystems/ztka/components/prompt/pkg/prompt"
+	"github.com/RafaySystems/ztka/components/prompt/pkg/prompt/internal/term"
 )
 
 func main() {

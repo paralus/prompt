@@ -3,7 +3,7 @@
 package kube
 
 import (
-	prompt "github.com/RafaySystems/rafay-prompt/pkg/prompt"
+	prompt "github.com/RafaySystems/ztka/components/prompt/pkg/prompt"
 )
 
 var configSetClusterOptions = []prompt.Suggest{

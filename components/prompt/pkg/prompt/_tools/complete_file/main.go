@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
-	prompt "github.com/RafaySystems/rafay-prompt/pkg/prompt"
-	"github.com/RafaySystems/rafay-prompt/pkg/prompt/completer"
+	prompt "github.com/RafaySystems/ztka/components/prompt/pkg/prompt"
+	"github.com/RafaySystems/ztka/components/prompt/pkg/prompt/completer"
 )
 
 var filePathCompleter = completer.FilePathCompleter{

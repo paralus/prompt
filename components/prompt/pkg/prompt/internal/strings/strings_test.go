@@ -3,7 +3,7 @@ package strings_test
 import (
 	"fmt"
 
-	"github.com/RafaySystems/rafay-prompt/pkg/prompt/internal/strings"
+	"github.com/RafaySystems/ztka/components/prompt/pkg/prompt/internal/strings"
 )
 
 func ExampleIndexNotByte() {

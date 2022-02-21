@@ -11,7 +11,7 @@ import (
 
 	"github.com/RafaySystems/rafay-common/pkg/audit"
 	logv2 "github.com/RafaySystems/rafay-common/pkg/log/v2"
-	"github.com/RafaySystems/rafay-prompt/pkg/prompt"
+	"github.com/RafaySystems/ztka/components/prompt/pkg/prompt"
 	"github.com/creack/pty"
 )
 

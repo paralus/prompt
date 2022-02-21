@@ -1,6 +1,6 @@
 package prompt
 
-import "github.com/RafaySystems/rafay-prompt/pkg/prompt/internal/debug"
+import "github.com/RafaySystems/ztka/components/prompt/pkg/prompt/internal/debug"
 
 /*
 

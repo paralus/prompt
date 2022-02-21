@@ -10,7 +10,7 @@ import (
 
 	logv2 "github.com/RafaySystems/rafay-common/pkg/log/v2"
 	ctypesv2 "github.com/RafaySystems/rafay-common/pkg/types/v2"
-	rpcv2 "github.com/RafaySystems/rafay-prompt/proto/rpc/v2"
+	rpcv2 "github.com/RafaySystems/ztka/components/prompt/proto/rpc/v2"
 	sentryrpcv2 "github.com/RafaySystems/rafay-sentry/proto/rpc/v2"
 	"github.com/pkg/errors"
 	"github.com/rs/xid"

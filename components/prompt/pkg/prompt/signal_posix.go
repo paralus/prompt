@@ -7,7 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/RafaySystems/rafay-prompt/pkg/prompt/internal/debug"
+	"github.com/RafaySystems/ztka/components/prompt/pkg/prompt/internal/debug"
 )
 
 func (p *Prompt) handleSignals(exitCh chan int, winSizeCh chan *WinSize, stop chan struct{}) {

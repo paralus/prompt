@@ -7,8 +7,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/RafaySystems/rafay-prompt/internal/debug"
-	prompt "github.com/RafaySystems/rafay-prompt/pkg/prompt"
+	"github.com/RafaySystems/ztka/components/prompt/internal/debug"
+	prompt "github.com/RafaySystems/ztka/components/prompt/pkg/prompt"
 	appsv1 "k8s.io/api/apps/v1"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"

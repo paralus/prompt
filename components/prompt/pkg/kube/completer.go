@@ -4,8 +4,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/RafaySystems/rafay-prompt/pkg/prompt"
-	"github.com/RafaySystems/rafay-prompt/pkg/prompt/completer"
+	"github.com/RafaySystems/ztka/components/prompt/pkg/prompt"
+	"github.com/RafaySystems/ztka/components/prompt/pkg/prompt/completer"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/RafaySystems/rafay-prompt/pkg/prompt/internal/bisect"
+	"github.com/RafaySystems/ztka/components/prompt/pkg/prompt/internal/bisect"
 )
 
 func Example() {

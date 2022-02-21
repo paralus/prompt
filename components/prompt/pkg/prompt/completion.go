@@ -3,7 +3,7 @@ package prompt
 import (
 	"strings"
 
-	"github.com/RafaySystems/rafay-prompt/pkg/prompt/internal/debug"
+	"github.com/RafaySystems/ztka/components/prompt/pkg/prompt/internal/debug"
 	runewidth "github.com/mattn/go-runewidth"
 )
 

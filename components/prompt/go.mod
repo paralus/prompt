@@ -1,4 +1,4 @@
-module github.com/RafaySystems/rafay-prompt
+module github.com/RafaySystems/ztka/components/prompt
 
 go 1.13
 
