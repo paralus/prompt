@@ -6,9 +6,8 @@ require (
 	github.com/RafaySystems/rafay-common v1.6.0-beta3.0.20210803105956-3fbeb5be8ae9
 	github.com/RafaySystems/rafay-sentry v0.0.15
 	github.com/RafaySystems/rctl v1.5.14
-	github.com/Shopify/sarama v1.29.1
+	github.com/Shopify/sarama v1.29.1 // indirect
 	github.com/creack/pty v1.1.9
-	github.com/go-pg/pg v8.0.4+incompatible
 	github.com/gogo/googleapis v1.2.0
 	github.com/gogo/protobuf v1.3.1
 	github.com/golang/protobuf v1.4.3
