@@ -1,0 +1,504 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Approval Service",
+    "version": "2.0",
+    "contact": {
+      "name": "Rafay Dev"
+    }
+  },
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json",
+    "application/yaml"
+  ],
+  "produces": [
+    "application/json",
+    "application/yaml"
+  ],
+  "paths": {
+    "/v2/debug/{metadata.urlScope}/cluster/{metadata.name}/vm/{VMName}/pause": {
+      "post": {
+        "operationId": "PauseVM",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2VMResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "format": "string"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "metadata.urlScope",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "VMName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v2VMRequest"
+            }
+          }
+        ],
+        "tags": [
+          "VirtualMachine"
+        ]
+      }
+    },
+    "/v2/debug/{metadata.urlScope}/cluster/{metadata.name}/vm/{VMName}/restart": {
+      "post": {
+        "operationId": "RestartVM",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2VMResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "format": "string"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "metadata.urlScope",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "VMName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v2VMRequest"
+            }
+          }
+        ],
+        "tags": [
+          "VirtualMachine"
+        ]
+      }
+    },
+    "/v2/debug/{metadata.urlScope}/cluster/{metadata.name}/vm/{VMName}/start": {
+      "post": {
+        "operationId": "StartVM",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2VMResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "format": "string"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "metadata.urlScope",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "VMName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v2VMRequest"
+            }
+          }
+        ],
+        "tags": [
+          "VirtualMachine"
+        ]
+      }
+    },
+    "/v2/debug/{metadata.urlScope}/cluster/{metadata.name}/vm/{VMName}/stop": {
+      "post": {
+        "operationId": "StopVM",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2VMResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "format": "string"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "metadata.urlScope",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "VMName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v2VMRequest"
+            }
+          }
+        ],
+        "tags": [
+          "VirtualMachine"
+        ]
+      }
+    },
+    "/v2/debug/{metadata.urlScope}/cluster/{metadata.name}/vm/{VMName}/unpause": {
+      "post": {
+        "operationId": "UnpauseVM",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2VMResponse"
+            }
+          },
+          "403": {
+            "description": "Returned when the user does not have permission to access the resource.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "format": "string"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "metadata.urlScope",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metadata.name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "VMName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v2VMRequest"
+            }
+          }
+        ],
+        "tags": [
+          "VirtualMachine"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "v2NamespaceData": {
+      "type": "object",
+      "properties": {
+        "project_id": {
+          "type": "string"
+        },
+        "namespace_id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "v2ProjectData": {
+      "type": "object",
+      "properties": {
+        "all": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v2ProjectRole"
+          }
+        }
+      }
+    },
+    "v2ProjectRole": {
+      "type": "object",
+      "properties": {
+        "project_id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "v2RafayMeta": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "readOnly": true
+        },
+        "modifiedAt": {
+          "type": "string",
+          "format": "date-time",
+          "readOnly": true
+        },
+        "deletedAt": {
+          "type": "string",
+          "format": "date-time",
+          "readOnly": true
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "annotations": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "requestMeta": {
+          "$ref": "#/definitions/v2RequestMeta"
+        },
+        "urlScope": {
+          "type": "string"
+        },
+        "ID": {
+          "type": "string"
+        }
+      },
+      "title": "RafayMeta contains common metadata for every model"
+    },
+    "v2RequestMeta": {
+      "type": "object",
+      "properties": {
+        "organizationID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "partnerID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "projectID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "ignoreScopeDefault": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "globalScope": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "isSSOUser": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "accountID": {
+          "type": "string",
+          "format": "int64"
+        },
+        "username": {
+          "type": "string"
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "auth_type": {
+          "type": "string"
+        },
+        "idp": {
+          "type": "string"
+        },
+        "is_org_admin": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "boolean",
+            "format": "boolean"
+          }
+        },
+        "client_type": {
+          "type": "string"
+        },
+        "is_all_ns_access": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "boolean",
+            "format": "boolean"
+          }
+        },
+        "namespaces": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v2NamespaceData"
+          }
+        },
+        "project": {
+          "$ref": "#/definitions/v2ProjectData"
+        },
+        "is_super_admin": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "is_partner_admin": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      },
+      "title": "RequestMeta is the metadata for current request\ndocument of params available at\nrcloud/components/adminsrv/adminsrv/common/auth_context.py"
+    },
+    "v2VMRequest": {
+      "type": "object",
+      "properties": {
+        "metadata": {
+          "$ref": "#/definitions/v2RafayMeta"
+        },
+        "VMName": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        }
+      }
+    },
+    "v2VMResponse": {
+      "type": "object",
+      "properties": {
+        "output": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "ApiKeyAuth": {
+      "type": "apiKey",
+      "name": "X-RAFAY-API-KEYID",
+      "in": "header"
+    },
+    "BasicAuth": {
+      "type": "basic"
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": [],
+      "BasicAuth": []
+    }
+  ]
+}
