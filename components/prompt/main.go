@@ -11,14 +11,13 @@ import (
 	"github.com/RafaySystems/rafay-common/pkg/auth/interceptors"
 	am "github.com/RafaySystems/rafay-common/pkg/auth/middleware"
 	authv1 "github.com/RafaySystems/rafay-common/pkg/auth/v1"
-	"github.com/RafaySystems/rafay-common/pkg/gateway"
 	grpcutils "github.com/RafaySystems/rafay-common/pkg/grpc"
 	logv2 "github.com/RafaySystems/rafay-common/pkg/log/v2"
+	sentryprcv2 "github.com/RafaySystems/rafay-sentry/proto/rpc/v2"
+	"github.com/RafaySystems/rcloud-base/components/common/pkg/gateway"
 	"github.com/RafaySystems/ztka/components/prompt/debug"
 	intdev "github.com/RafaySystems/ztka/components/prompt/internal/dev"
 	pbrpcv2 "github.com/RafaySystems/ztka/components/prompt/proto/rpc/v2"
-	rpcv2 "github.com/RafaySystems/ztka/components/prompt/rpc/v2"
-	sentryprcv2 "github.com/RafaySystems/rafay-sentry/proto/rpc/v2"
 	"github.com/gorilla/websocket"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/julienschmidt/httprouter"
@@ -91,18 +90,16 @@ func runAPI(wg *sync.WaitGroup, stop <-chan struct{}) {
 	defer wg.Done()
 	r := httprouter.New()
 
-	dh, kh, lh := debug.NewDebugHandler(sp, tmpPath, dev)
+	dh := debug.NewDebugHandler(sp, tmpPath, dev)
 
 	r.ServeFiles("/v2/debug/ui/*filepath", intdev.DevFS)
 	r.Handle("GET", "/v2/debug/prompt/project/:project_id/cluster/:cluster_name", dh)
-	r.Handle("GET", "/v2/debug/kubectlview/project/:project_id/cluster/:cluster_name", kh)
-	r.Handle("GET", "/v2/debug/getlogs/project/:project_id/cluster/:cluster_name", lh)
 
 	gwHandler, err := gateway.NewGateway(
 		context.Background(),
 		fmt.Sprintf(":%d", rpcPort),
 		make([]runtime.ServeMuxOption, 0),
-		pbrpcv2.RegisterVirtualMachineHandlerFromEndpoint,
+		pbrpcv2.RegisterDummyHandlerFromEndpoint, // Created a dummy handler otherwise NewGateway throw error on zero handler
 	)
 	if err != nil {
 		_log.Fatalw("unable to create gateway", "error", err)
@@ -158,8 +155,6 @@ func runRPC(wg *sync.WaitGroup, stop <-chan struct{}) {
 
 	var err error
 
-	virtualMachineServer := rpcv2.NewVirtualMachineServer(sp, tmpPath)
-
 	l, err := net.Listen("tcp", fmt.Sprintf(":%d", rpcPort))
 	if err != nil {
 		_log.Fatalw("unable to start rpc listener", "error", err)
@@ -178,8 +173,6 @@ func runRPC(wg *sync.WaitGroup, stop <-chan struct{}) {
 	if err != nil {
 		_log.Fatalw("unable to create grpc server", "error", err)
 	}
-
-	pbrpcv2.RegisterVirtualMachineServer(s, virtualMachineServer)
 
 	go func() {
 		_log.Infow("starting rpc server", "port", rpcPort)

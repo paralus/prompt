@@ -17,11 +17,11 @@ import (
 	"github.com/RafaySystems/rafay-common/pkg/audit"
 	am "github.com/RafaySystems/rafay-common/pkg/auth/middleware"
 	ctypesv2 "github.com/RafaySystems/rafay-common/pkg/types/v2"
+	sentryrpcv2 "github.com/RafaySystems/rafay-sentry/proto/rpc/v2"
+	"github.com/RafaySystems/rctl/pkg/hashid"
 	"github.com/RafaySystems/ztka/components/prompt/pkg/kube"
 	"github.com/RafaySystems/ztka/components/prompt/pkg/prompt"
 	"github.com/RafaySystems/ztka/components/prompt/pkg/prompt/completer"
-	sentryrpcv2 "github.com/RafaySystems/rafay-sentry/proto/rpc/v2"
-	"github.com/RafaySystems/rctl/pkg/hashid"
 	"github.com/gorilla/websocket"
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/xid"
@@ -37,14 +37,6 @@ type debugHandler struct {
 	sp      sentryrpcv2.SentryPool
 	tmpPath string
 	dev     bool
-}
-
-type kubeviewHandler struct {
-	dh *debugHandler
-}
-
-type getlogsHandler struct {
-	dh *debugHandler
 }
 
 type reqAuth struct {
@@ -289,214 +281,15 @@ func (h *debugHandler) Handle(w http.ResponseWriter, r *http.Request, ps httprou
 
 }
 
-func (kh *kubeviewHandler) Handle(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	var decodedCmd string
-	var execArgs []string
-
-	auth, err := kh.dh.getAuth(r, ps)
-	if err != nil {
-		_log.Infow("unable to get auth", "error", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	clusterName := ps.ByName("cluster_name")
-	nameSpace := r.URL.Query().Get("namespace")
-	command := r.URL.Query().Get("cargs")
-	if command != "" {
-		decod, err := base64.StdEncoding.DecodeString(command)
-		if err == nil {
-			decodedCmd = string(decod)
-		}
-	}
-
-	_log.Infow("KubeViewHandle", "post router", ps, "nameSpace", nameSpace, "command", command, "decoded", decodedCmd)
-
-	kubeConfig, err := kh.dh.getKubeConfig(r.Context(), auth, clusterName, nameSpace, true)
-	if err != nil {
-		_log.Infow("unable to get kube config", "error", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	// kubeviewHandler is used by DashBoard to get realtime data from cluster
-	// Will keep a longer cache for better performance.
-	// Cache is purged if there is no update in 24Hr
-	dPath := "kubectlview-" + clusterName + strconv.Itoa(int(auth.PartnerID)) + strconv.Itoa(int(auth.OrganizationID)) + strconv.Itoa(int(auth.AccountID))
-
-	args, err := kh.dh.setupPromptEnv(dPath, kubeConfig)
-	if err != nil {
-		_log.Infow("unable to setup prompt env", "error", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	for _, arg := range args {
-		if strings.TrimSpace(arg) != "" {
-			execArgs = append(execArgs, arg)
-		}
-	}
-
-	for _, arg := range strings.Split(decodedCmd, " ") {
-		if strings.TrimSpace(arg) != "" {
-			execArgs = append(execArgs, arg)
-		}
-	}
-
-	output, err := exec.Command("/opt/rafay/kubectl", execArgs...).Output()
-	if err != nil {
-		cmdExec := exec.Command("/opt/rafay/kubectl", execArgs...)
-		output, err := cmdExec.CombinedOutput()
-		errString := ""
-		outString := ""
-		if err != nil {
-			errString = err.Error()
-		}
-		if len(output) > 0 {
-			outString = string(output)
-		}
-		http.Error(w, errString+" : "+outString, http.StatusInternalServerError)
-	} else {
-		w.Write(output)
-		_log.Infow("KubeViewHandle", "outputSize", len(output))
-	}
-}
-
 // NewDebugHandler returns debug handler
-func NewDebugHandler(sp sentryrpcv2.SentryPool, tmpPath string, dev bool) (httprouter.Handle, httprouter.Handle, httprouter.Handle) {
+func NewDebugHandler(sp sentryrpcv2.SentryPool, tmpPath string, dev bool) httprouter.Handle {
 	dh := &debugHandler{
 		sp:      sp,
 		tmpPath: tmpPath,
 		dev:     dev,
 	}
 
-	kh := &kubeviewHandler{
-		dh: dh,
-	}
-
-	lh := &getlogsHandler{
-		dh: dh,
-	}
-
-	return dh.Handle, kh.Handle, lh.Handle
-}
-
-func (lh *getlogsHandler) Handle(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	var decodedCmd string
-
-	auth, err := lh.dh.getAuth(r, ps)
-	if err != nil {
-		_log.Infow("unable to get auth", "error", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	clusterName := ps.ByName("cluster_name")
-	nameSpace := r.URL.Query().Get("namespace")
-	command := r.URL.Query().Get("cargs")
-	if command != "" {
-		decod, err := base64.StdEncoding.DecodeString(command)
-		if err == nil {
-			decodedCmd = string(decod)
-			if !strings.HasPrefix(decodedCmd, "logs") {
-				_log.Infow("getlogsHandler", "cannot use any command other than logs")
-				http.Error(w, "invalid cargs", http.StatusInternalServerError)
-				return
-			}
-		} else {
-			_log.Infow("getlogsHandler", "failure in decode")
-			http.Error(w, "invalid cargs", http.StatusInternalServerError)
-			return
-		}
-	} else {
-		_log.Infow("getlogsHandler", "cannot use empty commands in this handler")
-		http.Error(w, "invalid cargs", http.StatusInternalServerError)
-		return
-	}
-
-	_log.Infow("getlogsHandler", "post router", ps, "nameSpace", nameSpace, "command", command, "decoded", decodedCmd)
-
-	kubeConfig, err := lh.dh.getKubeConfig(r.Context(), auth, clusterName, nameSpace, true)
-	if err != nil {
-		_log.Infow("unable to get kube config", "error", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	dPath := xid.New().String()
-
-	args, err := lh.dh.setupPromptEnv(dPath, kubeConfig)
-	if err != nil {
-		_log.Infow("unable to setup prompt env", "error", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	rows := r.URL.Query().Get("rows")
-	cols := r.URL.Query().Get("cols")
-
-	rowsUint, err := strconv.ParseUint(rows, 10, 16)
-	if err != nil {
-		_log.Infow("unable to parse rows", "error", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	colsUint, err := strconv.ParseUint(cols, 10, 16)
-	if err != nil {
-		_log.Infow("unable to parse cols", "error", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	c, err := kube.NewCompleter(kubeConfig)
-	if err != nil {
-		_log.Infow("unable to create completer", "error", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	conn, err := upgrader.Upgrade(w, r, nil)
-	if err != nil {
-		_log.Infow("unable to update", "error", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	ctx, cancel := context.WithCancel(r.Context())
-
-	conn.SetCloseHandler(func(code int, text string) error {
-		_log.Infow("client closed websocket")
-		cancel()
-		lh.dh.teardownPromptEnv(dPath)
-		return nil
-	})
-
-	rw := newWSReadWriter(conn)
-
-	go func() {
-
-		p := prompt.New(
-			kube.NewIOExecutor(rw, uint16(rowsUint), uint16(colsUint), args, nil),
-			c.Complete,
-			prompt.OptionParser(prompt.NewIOParser(uint16(rowsUint), uint16(colsUint), rw)),
-			prompt.OptionWriter(prompt.NewIOWriter(rw)),
-			prompt.OptionTitle("rafay-prompt: interactive kubernetes client"),
-			prompt.OptionPrefix("kubectl "),
-			prompt.OptionPrefixTextColor(prompt.Green),
-			prompt.OptionInputTextColor(prompt.Yellow),
-			prompt.OptionCompletionWordSeparator(completer.FilePathCompletionSeparator),
-			prompt.OptionSwitchKeyBindMode(prompt.CommonKeyBind),
-		)
-		if decodedCmd != "" {
-			p.RunPreset(ctx, decodedCmd)
-		} else {
-			p.Run(ctx)
-		}
-	}()
-
-	<-ctx.Done()
-	_log.Infow("closing websocket context done")
-
+	return dh.Handle
 }
 
 func hasKubeCache(path string) bool {
