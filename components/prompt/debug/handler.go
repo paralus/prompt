@@ -3,6 +3,7 @@ package debug
 import (
 	"context"
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -15,9 +16,9 @@ import (
 	"os/exec"
 
 	"github.com/RafaySystems/rafay-common/pkg/audit"
-	am "github.com/RafaySystems/rafay-common/pkg/auth/middleware"
 	ctypesv2 "github.com/RafaySystems/rafay-common/pkg/types/v2"
-	sentryrpcv2 "github.com/RafaySystems/rafay-sentry/proto/rpc/v2"
+	authv3 "github.com/RafaySystems/rcloud-base/components/common/pkg/auth/v3"
+	sentryrpcv2 "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/sentry"
 	"github.com/RafaySystems/rctl/pkg/hashid"
 	"github.com/RafaySystems/ztka/components/prompt/pkg/kube"
 	"github.com/RafaySystems/ztka/components/prompt/pkg/prompt"
@@ -52,21 +53,12 @@ type reqAuth struct {
 }
 
 func (h *debugHandler) getAuth(r *http.Request, ps httprouter.Params) (*reqAuth, error) {
-	meta, err := am.RequestMetaFromContext(r.Context())
-	if err != nil {
-		return nil, err
+	sd, ok := authv3.GetSession(r.Context())
+	if !ok {
+		return nil, errors.New("Failed to get session data")
 	}
 
-	auth := &reqAuth{
-		AccountID:          meta.AccountID,
-		PartnerID:          meta.PartnerID,
-		OrganizationID:     meta.OrganizationID,
-		IsSSOUser:          meta.IsSSOUser,
-		Username:           meta.Username,
-		Groups:             meta.Groups,
-		IgnoreScopeDefault: meta.IgnoreScopeDefault,
-		GlobalScope:        meta.GlobalScope,
-	}
+	auth := &reqAuth{} // TODO: Fill in fields
 
 	auth.ProjectID = ps.ByName("project_id")
 
