@@ -91,13 +91,14 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 	r.ServeFiles("/v2/debug/ui/*filepath", intdev.DevFS)
 	r.Handle("GET", "/v2/debug/prompt/project/:project_id/cluster/:cluster_name", dh)
 
-	ac := authv3.NewAuthContext()
-	o := authv3.Option{}
-
 	n := negroni.New(
 		negroni.NewRecovery(),
-		ac.NewAuthMiddleware(o),
 	)
+
+	if !dev {
+		o := authv3.Option{}
+		n.Use(authv3.NewAuthMiddleware(o))
+	}
 
 	n.UseHandler(r)
 
