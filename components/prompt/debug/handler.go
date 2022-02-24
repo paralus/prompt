@@ -16,9 +16,9 @@ import (
 	"os/exec"
 
 	"github.com/RafaySystems/rafay-common/pkg/audit"
-	ctypesv2 "github.com/RafaySystems/rafay-common/pkg/types/v2"
 	authv3 "github.com/RafaySystems/rcloud-base/components/common/pkg/auth/v3"
 	sentryrpcv2 "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/sentry"
+	ctypesv3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"
 	"github.com/RafaySystems/rctl/pkg/hashid"
 	"github.com/RafaySystems/ztka/components/prompt/pkg/kube"
 	"github.com/RafaySystems/ztka/components/prompt/pkg/prompt"
@@ -41,9 +41,9 @@ type debugHandler struct {
 }
 
 type reqAuth struct {
-	AccountID          ctypesv2.RafayID
-	PartnerID          int64
-	OrganizationID     int64
+	Account            string
+	Partner            string
+	Organization       string
 	ProjectID          string
 	IsSSOUser          bool
 	Username           string
@@ -58,15 +58,22 @@ func (h *debugHandler) getAuth(r *http.Request, ps httprouter.Params) (*reqAuth,
 		return nil, errors.New("Failed to get session data")
 	}
 
-	auth := &reqAuth{} // TODO: Fill in fields
-
-	auth.ProjectID = ps.ByName("project_id")
+	// TODO: Fill in all fields
+	auth := &reqAuth{
+		Account:      sd.GetAccount(),
+		Partner:      sd.GetPartner(),
+		Organization: sd.GetOrganization(),
+		ProjectID:    ps.ByName("project_id"),
+		IsSSOUser:    sd.GetIsSsoUser(),
+		Username:     sd.GetUsername(),
+		Groups:       sd.GetGroups(),
+	}
 
 	return auth, nil
 }
 
 func (h *debugHandler) getKubeConfig(ctx context.Context, auth *reqAuth, clusterName, nameSpace string, isSystemSession bool) ([]byte, error) {
-	var resp *ctypesv2.HttpBody
+	var resp *ctypesv3.HttpBody
 
 	nCtx, cancel := context.WithTimeout(ctx, time.Second*10)
 	defer cancel()
@@ -76,10 +83,10 @@ func (h *debugHandler) getKubeConfig(ctx context.Context, auth *reqAuth, cluster
 	}
 	defer sc.Close()
 	_log.Debugw("get kube config", "auth", auth)
-	opts := ctypesv2.QueryOptions{
-		PartnerID:          auth.PartnerID,
-		OrganizationID:     auth.OrganizationID,
-		AccountID:          auth.AccountID,
+	opts := ctypesv3.QueryOptions{
+		Partner:            auth.Partner,
+		Organization:       auth.Organization,
+		Account:            auth.Account,
 		IsSSOUser:          auth.IsSSOUser,
 		Username:           auth.Username,
 		Groups:             auth.Groups,
@@ -100,13 +107,13 @@ func (h *debugHandler) getKubeConfig(ctx context.Context, auth *reqAuth, cluster
 
 	if isSystemSession {
 		resp, err = sc.GetForClusterSystemSession(nCtx, &sentryrpcv2.GetForClusterRequest{
-			QueryOptions: opts,
-			Namespace:    nameSpace,
+			Opts:      &opts,
+			Namespace: nameSpace,
 		})
 	} else {
 		resp, err = sc.GetForClusterWebSession(nCtx, &sentryrpcv2.GetForClusterRequest{
-			QueryOptions: opts,
-			Namespace:    nameSpace,
+			Opts:      &opts,
+			Namespace: nameSpace,
 		})
 	}
 
@@ -215,7 +222,7 @@ func (h *debugHandler) Handle(w http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 
-	c, err := kube.NewCompleter(kubeConfig)
+	c, err := kube.NewCompleter(context.Background(), kubeConfig)
 	if err != nil {
 		_log.Infow("unable to create completer", "error", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
