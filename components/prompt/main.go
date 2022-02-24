@@ -3,27 +3,20 @@ package main
 import (
 	"context"
 	"fmt"
-	"net"
 	"net/http"
 	"sync"
 	"time"
 
-	am "github.com/RafaySystems/rafay-common/pkg/auth/middleware"
 	authv1 "github.com/RafaySystems/rafay-common/pkg/auth/v1"
-	grpcutils "github.com/RafaySystems/rafay-common/pkg/grpc"
 	logv2 "github.com/RafaySystems/rafay-common/pkg/log/v2"
 	sentryprcv2 "github.com/RafaySystems/rafay-sentry/proto/rpc/v2"
 	authv3 "github.com/RafaySystems/rcloud-base/components/common/pkg/auth/v3"
-	"github.com/RafaySystems/rcloud-base/components/common/pkg/gateway"
 	"github.com/RafaySystems/ztka/components/prompt/debug"
 	intdev "github.com/RafaySystems/ztka/components/prompt/internal/dev"
-	pbrpcv2 "github.com/RafaySystems/ztka/components/prompt/proto/rpc/v2"
 	"github.com/gorilla/websocket"
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/julienschmidt/httprouter"
 	"github.com/spf13/viper"
 	"github.com/urfave/negroni"
-	"google.golang.org/grpc"
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
 )
 
@@ -86,8 +79,11 @@ func setup() {
 
 }
 
-func runAPI(wg *sync.WaitGroup, stop <-chan struct{}) {
+func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 	defer wg.Done()
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	r := httprouter.New()
 
 	dh := debug.NewDebugHandler(sp, tmpPath, dev)
@@ -95,28 +91,12 @@ func runAPI(wg *sync.WaitGroup, stop <-chan struct{}) {
 	r.ServeFiles("/v2/debug/ui/*filepath", intdev.DevFS)
 	r.Handle("GET", "/v2/debug/prompt/project/:project_id/cluster/:cluster_name", dh)
 
-	gwHandler, err := gateway.NewGateway(
-		context.Background(),
-		fmt.Sprintf(":%d", rpcPort),
-		make([]runtime.ServeMuxOption, 0),
-		pbrpcv2.RegisterDummyHandlerFromEndpoint, // Created a dummy handler otherwise NewGateway throw error on zero handler
-	)
-	if err != nil {
-		_log.Fatalw("unable to create gateway", "error", err)
-	}
-
-	r.NotFound = gwHandler
-
-	amOpts := []am.Option{am.WithLogRequest()}
-	if dev {
-		amOpts = append(amOpts, am.WithDummy())
-	} else {
-		amOpts = append(amOpts, am.WithAuthPool(ap))
-	}
+	ac := authv3.NewAuthContext()
+	o := authv3.Option{}
 
 	n := negroni.New(
 		negroni.NewRecovery(),
-		am.NewAuthMiddleware(amOpts...),
+		ac.NewAuthMiddleware(o),
 	)
 
 	n.UseHandler(r)
@@ -143,63 +123,26 @@ func runAPI(wg *sync.WaitGroup, stop <-chan struct{}) {
 	defer pcancel()
 	go debug.PruneCacheDirs(pctx, tmpPath)
 
-	<-stop
+	<-ctx.Done()
 	_log.Infow("shutting down debug prompt server")
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	ctx, cancel = context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 	s.Shutdown(ctx)
 }
 
-func runRPC(wg *sync.WaitGroup, stop <-chan struct{}) {
-	defer wg.Done()
-
-	var err error
-
-	l, err := net.Listen("tcp", fmt.Sprintf(":%d", rpcPort))
-	if err != nil {
-		_log.Fatalw("unable to start rpc listener", "error", err)
-	}
-
-	var opts []grpc.ServerOption
-	if !dev {
-		o := authv3.Option{}
-		ac := authv3.NewAuthContext()
-		opts = append(opts, grpc.UnaryInterceptor(
-			ac.NewAuthUnaryInterceptor(o),
-		))
-	}
-	s, err := grpcutils.NewServer(opts...)
-	if err != nil {
-		_log.Fatalw("unable to create grpc server", "error", err)
-	}
-
-	go func() {
-		_log.Infow("starting rpc server", "port", rpcPort)
-		err = s.Serve(l)
-		if err != nil {
-			_log.Fatalw("unable to start rpc server", "error", err)
-		}
-	}()
-
-	<-stop
-	s.GracefulStop()
-}
-
 func run() {
-	stop := signals.SetupSignalHandler()
+	ctx := signals.SetupSignalHandler()
 	var wg sync.WaitGroup
 
 	wg.Add(1)
-	go runAPI(&wg, stop)
-	go runRPC(&wg, stop)
+	go runAPI(&wg, ctx)
 
-	<-stop
+	<-ctx.Done()
 	wg.Wait()
 }
 
 func main() {
 
 	setup()
-
 	run()
 }
