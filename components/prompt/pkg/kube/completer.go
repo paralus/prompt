@@ -1,6 +1,7 @@
 package kube
 
 import (
+	"context"
 	"os"
 	"strings"
 
@@ -14,7 +15,7 @@ import (
 )
 
 // NewCompleter returns new prompt completer for kubeconfig file
-func NewCompleter(kubeConfig []byte) (*Completer, error) {
+func NewCompleter(ctx context.Context, kubeConfig []byte) (*Completer, error) {
 	clientConfig, err := clientcmd.NewClientConfigFromBytes(kubeConfig)
 	if err != nil {
 		return nil, err
@@ -37,7 +38,7 @@ func NewCompleter(kubeConfig []byte) (*Completer, error) {
 	}
 
 	// TODO handle namespace for restricted users
-	namespaces, err := client.CoreV1().Namespaces().List(metav1.ListOptions{})
+	namespaces, err := client.CoreV1().Namespaces().List(ctx, metav1.ListOptions{})
 	if err != nil {
 		if statusError, ok := err.(*errors.StatusError); ok && statusError.Status().Code == 403 {
 			namespaces = nil
