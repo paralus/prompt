@@ -8,18 +8,18 @@ import (
 	"sync"
 	"time"
 
-	"github.com/RafaySystems/rafay-common/pkg/auth/interceptors"
 	am "github.com/RafaySystems/rafay-common/pkg/auth/middleware"
 	authv1 "github.com/RafaySystems/rafay-common/pkg/auth/v1"
 	grpcutils "github.com/RafaySystems/rafay-common/pkg/grpc"
 	logv2 "github.com/RafaySystems/rafay-common/pkg/log/v2"
 	sentryprcv2 "github.com/RafaySystems/rafay-sentry/proto/rpc/v2"
+	authv3 "github.com/RafaySystems/rcloud-base/components/common/pkg/auth/v3"
 	"github.com/RafaySystems/rcloud-base/components/common/pkg/gateway"
 	"github.com/RafaySystems/ztka/components/prompt/debug"
 	intdev "github.com/RafaySystems/ztka/components/prompt/internal/dev"
 	pbrpcv2 "github.com/RafaySystems/ztka/components/prompt/proto/rpc/v2"
 	"github.com/gorilla/websocket"
-	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/julienschmidt/httprouter"
 	"github.com/spf13/viper"
 	"github.com/urfave/negroni"
@@ -162,12 +162,11 @@ func runRPC(wg *sync.WaitGroup, stop <-chan struct{}) {
 
 	var opts []grpc.ServerOption
 	if !dev {
+		o := authv3.Option{}
+		ac := authv3.NewAuthContext()
 		opts = append(opts, grpc.UnaryInterceptor(
-			interceptors.NewAuthInterceptor(ap),
+			ac.NewAuthUnaryInterceptor(o),
 		))
-	} else {
-		opts = append(opts, grpc.UnaryInterceptor(
-			interceptors.NewDummyInterceptor()))
 	}
 	s, err := grpcutils.NewServer(opts...)
 	if err != nil {
