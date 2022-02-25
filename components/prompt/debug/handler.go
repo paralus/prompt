@@ -358,18 +358,26 @@ func PruneCacheDirs(ctx context.Context, root string) {
 }
 
 func (h *debugHandler) GetEventForKubectlCommands(r *http.Request, auth *reqAuth, clusterName string) (*audit.Event, error) {
-	partnerHashID, err := hashid.HashFromInt64(auth.PartnerID)
+	pId, err := strconv.ParseInt(auth.Partner, 10, 64)
+	if err != nil {
+		return nil, err
+	}
+	partnerHashID, err := hashid.HashFromInt64(pId)
 	if err != nil {
 		return nil, err
 	}
 
-	orgHashID, err := hashid.HashFromInt64(auth.OrganizationID)
+	oId, err := strconv.ParseInt(auth.Organization, 10, 64)
+	if err != nil {
+		return nil, err
+	}
+	orgHashID, err := hashid.HashFromInt64(oId)
 	if err != nil {
 		return nil, err
 	}
 
 	account := audit.EventActorAccount{
-		ID:       auth.AccountID.String(),
+		ID:       auth.Account,
 		Username: auth.Username,
 	}
 

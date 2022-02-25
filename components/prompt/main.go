@@ -7,7 +7,6 @@ import (
 	"sync"
 	"time"
 
-	authv1 "github.com/RafaySystems/rafay-common/pkg/auth/v1"
 	logv2 "github.com/RafaySystems/rafay-common/pkg/log/v2"
 	authv3 "github.com/RafaySystems/rcloud-base/components/common/pkg/auth/v3"
 	sentryrpcv2 "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/sentry"
@@ -38,7 +37,6 @@ var (
 	rpcPort    int
 
 	sp sentryrpcv2.SentryPool
-	ap authv1.AuthPool
 
 	_log = logv2.GetLogger()
 )
@@ -72,10 +70,6 @@ func setup() {
 	authAddr = viper.GetString(authAddrEnv)
 
 	sp = sentryrpcv2.NewSentryPool(sentryAddr, 10)
-
-	if !dev {
-		ap = authv1.NewAuthPool(authAddr, 10)
-	}
 
 }
 
