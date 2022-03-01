@@ -40,7 +40,7 @@
       cmdargs = window.btoa(cmd);
 
 
-      var loc = window.location, ws_url, direct_url;;
+      var loc = window.location, ws_url;
       if (loc.protocol === "https:") {
         ws_url = "wss:";
       } else {
@@ -49,17 +49,6 @@
       ws_url += "//" + loc.host;
       ws_url += "/v2/debug/prompt/project/"+ project +"/cluster/"+ clusterName +"?rows=" + term.rows + "&cols=" + term.cols + "&cargs=" + cmdargs
       
-      direct_url = loc.protocol + "//" + loc.host;
-      direct_url += "/v2/debug/kubectlview/project/"+ project +"/cluster/"+ clusterName +"?cargs=" + cmdargs ;
-
-      var a = document.createElement('a');
-      var linkText = document.createTextNode("rawdata");
-      a.appendChild(linkText);
-      a.title = "direct";
-
-      a.href = direct_url;
-      console.log(direct_url);
-
       socket = new WebSocket(ws_url, "binary");
 
       socket.onopen = function (event) {
