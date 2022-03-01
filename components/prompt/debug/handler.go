@@ -15,7 +15,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/RafaySystems/rafay-common/pkg/audit"
+	"github.com/RafaySystems/rcloud-base/components/common/pkg/audit"
 	authv3 "github.com/RafaySystems/rcloud-base/components/common/pkg/auth/v3"
 	sentryrpcv2 "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/sentry"
 	ctypesv3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"

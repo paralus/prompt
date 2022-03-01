@@ -3,10 +3,9 @@ module github.com/RafaySystems/ztka/components/prompt
 go 1.13
 
 require (
-	github.com/RafaySystems/rafay-common v1.6.0-beta3.0.20210803105956-3fbeb5be8ae9
-	github.com/RafaySystems/rcloud-base/components/common v0.0.0-20220225051145-edf2316ca53a
-	github.com/Shopify/sarama v1.29.1 // indirect
+	github.com/RafaySystems/rcloud-base/components/common v0.0.0-20220301114349-9bae880ce1f1
 	github.com/creack/pty v1.1.11
+	github.com/gopherjs/gopherjs v0.0.0-20190910122728-9d188e94fb99 // indirect
 	github.com/gorilla/websocket v1.4.2
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/mattn/go-runewidth v0.0.8
@@ -15,7 +14,7 @@ require (
 	github.com/rs/xid v1.3.0
 	github.com/spf13/viper v1.8.1
 	github.com/urfave/negroni v1.0.0
-	golang.org/x/sys v0.0.0-20211123173158-ef496fb156ab
+	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e
 	k8s.io/api v1.16.4
 	k8s.io/apimachinery v1.16.4
 	k8s.io/client-go v0.23.4
