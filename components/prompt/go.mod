@@ -5,7 +5,6 @@ go 1.13
 require (
 	github.com/RafaySystems/rafay-common v1.6.0-beta3.0.20210803105956-3fbeb5be8ae9
 	github.com/RafaySystems/rcloud-base/components/common v0.0.0-20220225051145-edf2316ca53a
-	github.com/RafaySystems/rctl v1.6.2
 	github.com/Shopify/sarama v1.29.1 // indirect
 	github.com/creack/pty v1.1.11
 	github.com/gorilla/websocket v1.4.2

@@ -7,8 +7,8 @@ import (
 	"sync"
 	"time"
 
-	logv2 "github.com/RafaySystems/rafay-common/pkg/log/v2"
 	authv3 "github.com/RafaySystems/rcloud-base/components/common/pkg/auth/v3"
+	logv2 "github.com/RafaySystems/rcloud-base/components/common/pkg/log"
 	sentryrpcv2 "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/sentry"
 	"github.com/RafaySystems/ztka/components/prompt/debug"
 	intdev "github.com/RafaySystems/ztka/components/prompt/internal/dev"

@@ -5,7 +5,7 @@ import (
 	"context"
 	"time"
 
-	logv2 "github.com/RafaySystems/rafay-common/pkg/log/v2"
+	logv2 "github.com/RafaySystems/rcloud-base/components/common/pkg/log"
 )
 
 var (

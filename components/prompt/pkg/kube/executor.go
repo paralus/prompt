@@ -11,7 +11,7 @@ import (
 	"sync"
 
 	"github.com/RafaySystems/rafay-common/pkg/audit"
-	logv2 "github.com/RafaySystems/rafay-common/pkg/log/v2"
+	logv2 "github.com/RafaySystems/rcloud-base/components/common/pkg/log"
 	"github.com/RafaySystems/ztka/components/prompt/pkg/prompt"
 	"github.com/creack/pty"
 )
