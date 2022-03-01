@@ -19,7 +19,6 @@ import (
 	authv3 "github.com/RafaySystems/rcloud-base/components/common/pkg/auth/v3"
 	sentryrpcv2 "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/sentry"
 	ctypesv3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"
-	"github.com/RafaySystems/rctl/pkg/hashid"
 	"github.com/RafaySystems/ztka/components/prompt/pkg/kube"
 	"github.com/RafaySystems/ztka/components/prompt/pkg/prompt"
 	"github.com/RafaySystems/ztka/components/prompt/pkg/prompt/completer"
@@ -358,24 +357,6 @@ func PruneCacheDirs(ctx context.Context, root string) {
 }
 
 func (h *debugHandler) GetEventForKubectlCommands(r *http.Request, auth *reqAuth, clusterName string) (*audit.Event, error) {
-	pId, err := strconv.ParseInt(auth.Partner, 10, 64)
-	if err != nil {
-		return nil, err
-	}
-	partnerHashID, err := hashid.HashFromInt64(pId)
-	if err != nil {
-		return nil, err
-	}
-
-	oId, err := strconv.ParseInt(auth.Organization, 10, 64)
-	if err != nil {
-		return nil, err
-	}
-	orgHashID, err := hashid.HashFromInt64(oId)
-	if err != nil {
-		return nil, err
-	}
-
 	account := audit.EventActorAccount{
 		ID:       auth.Account,
 		Username: auth.Username,
@@ -383,15 +364,15 @@ func (h *debugHandler) GetEventForKubectlCommands(r *http.Request, auth *reqAuth
 
 	event := audit.Event{
 		Portal:         "ADMIN",
-		PartnerID:      partnerHashID,
-		OrganizationID: orgHashID,
+		PartnerID:      auth.Partner,
+		OrganizationID: auth.Organization,
 		ProjectID:      auth.ProjectID,
 		Type:           "kubectl.command.detail",
 		Detail:         &audit.EventDetail{},
 		Actor: &audit.EventActor{
 			Type:           "USER",
-			PartnerID:      partnerHashID,
-			OrganizationID: orgHashID,
+			PartnerID:      auth.Partner,
+			OrganizationID: auth.Organization,
 			Account:        account,
 			Groups:         auth.Groups,
 		},
