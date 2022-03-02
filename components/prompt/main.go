@@ -11,7 +11,7 @@ import (
 	logv2 "github.com/RafaySystems/rcloud-base/components/common/pkg/log"
 	sentryrpcv2 "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/sentry"
 	"github.com/RafaySystems/ztka/components/prompt/debug"
-	intdev "github.com/RafaySystems/ztka/components/prompt/internal/dev"
+	ui "github.com/RafaySystems/ztka/components/prompt/internal/dev/ui"
 	"github.com/gorilla/websocket"
 	"github.com/julienschmidt/httprouter"
 	"github.com/spf13/viper"
@@ -92,7 +92,7 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 
 	dh := debug.NewDebugHandler(sp, tmpPath, dev, kubectlBin, auditFile)
 
-	r.ServeFiles("/v2/debug/ui/*filepath", intdev.DevFS)
+	r.ServeFiles("/v2/debug/ui/*filepath", http.FS(ui.Files))
 	r.Handle("GET", "/v2/debug/prompt/project/:project_id/cluster/:cluster_name", dh)
 
 	n := negroni.New(
