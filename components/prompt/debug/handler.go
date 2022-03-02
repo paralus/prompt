@@ -36,7 +36,6 @@ var upgrader = websocket.Upgrader{
 type debugHandler struct {
 	sp         sentryrpcv2.SentryPool
 	tmpPath    string
-	dev        bool
 	kubectlBin string
 	auditFile  string
 }
@@ -282,11 +281,10 @@ func (h *debugHandler) Handle(w http.ResponseWriter, r *http.Request, ps httprou
 }
 
 // NewDebugHandler returns debug handler
-func NewDebugHandler(sp sentryrpcv2.SentryPool, tmpPath string, dev bool, kubectlBin, auditFile string) httprouter.Handle {
+func NewDebugHandler(sp sentryrpcv2.SentryPool, tmpPath, kubectlBin, auditFile string) httprouter.Handle {
 	dh := &debugHandler{
 		sp:         sp,
 		tmpPath:    tmpPath,
-		dev:        dev,
 		kubectlBin: kubectlBin,
 		auditFile:  auditFile,
 	}

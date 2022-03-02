@@ -1,4 +1,4 @@
-### Go template
+q### Go template
 # Binaries for programs and plugins
 bin/
 kube-prompt
@@ -17,3 +17,5 @@ kube-prompt
 vendor/
 
 .kube/
+
+internal/dev/kubeconfig.yaml

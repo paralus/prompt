@@ -7,10 +7,11 @@ import (
 	"sync"
 	"time"
 
-	authv3 "github.com/RafaySystems/rcloud-base/components/common/pkg/auth/v3"
 	logv2 "github.com/RafaySystems/rcloud-base/components/common/pkg/log"
 	sentryrpcv2 "github.com/RafaySystems/rcloud-base/components/common/proto/rpc/sentry"
 	"github.com/RafaySystems/ztka/components/prompt/debug"
+	"github.com/RafaySystems/ztka/components/prompt/internal/dev/mock"
+	ui "github.com/RafaySystems/ztka/components/prompt/internal/dev/ui"
 	"github.com/gorilla/websocket"
 	"github.com/julienschmidt/httprouter"
 	"github.com/spf13/viper"
@@ -20,24 +21,18 @@ import (
 
 const (
 	apiPortEnv    = "API_PORT"
-	sentryAddrEnv = "SENTRY_ADDR"
 	tmpPathEnv    = "TEMP_PATH"
-	devEnv        = "DEV"
 	kubectlBinEnv = "KUBECTL_BIN"
 	auditFileEnv  = "AUDIT_LOG_FILE"
 )
 
 var (
 	apiPort    int
-	sentryAddr string
 	tmpPath    string
-	dev        bool
 	kubectlBin string
 	auditFile  string
-
-	sp sentryrpcv2.SentryPool
-
-	_log = logv2.GetLogger()
+	sp         sentryrpcv2.SentryPool
+	_log       = logv2.GetLogger()
 )
 
 var upgrader = websocket.Upgrader{
@@ -48,27 +43,21 @@ var upgrader = websocket.Upgrader{
 
 func setup() {
 	viper.SetDefault(apiPortEnv, 7009)
-	viper.SetDefault(sentryAddrEnv, "localhost:10000")
 	viper.SetDefault(tmpPathEnv, "/tmp")
-	viper.SetDefault(devEnv, true)
 	viper.SetDefault(kubectlBinEnv, "/usr/local/bin/kubectl")
 	viper.SetDefault(auditFileEnv, "/var/log/ztka-prompt/audit.log")
 
 	viper.BindEnv(apiPortEnv)
-	viper.BindEnv(sentryAddrEnv)
 	viper.BindEnv(tmpPathEnv)
-	viper.BindEnv(devEnv)
 	viper.BindEnv(kubectlBinEnv)
 	viper.BindEnv(auditFileEnv)
 
 	apiPort = viper.GetInt(apiPortEnv)
-	sentryAddr = viper.GetString(sentryAddrEnv)
 	tmpPath = viper.GetString(tmpPathEnv)
-	dev = viper.GetBool(devEnv)
 	kubectlBin = viper.GetString(kubectlBinEnv)
 	auditFile = viper.GetString(auditFileEnv)
 
-	sp = sentryrpcv2.NewSentryPool(sentryAddr, 10)
+	sp = &mock.SentryPool{}
 }
 
 func runAPI(wg *sync.WaitGroup, ctx context.Context) {
@@ -76,18 +65,17 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
+	r := httprouter.New()
+
 	dh := debug.NewDebugHandler(sp, tmpPath, kubectlBin, auditFile)
 
-	r := httprouter.New()
+	r.ServeFiles("/v2/debug/ui/*filepath", http.FS(ui.Files))
 	r.Handle("GET", "/v2/debug/prompt/project/:project_id/cluster/:cluster_name", dh)
 
 	n := negroni.New(
 		negroni.NewRecovery(),
 	)
-	if !dev {
-		o := authv3.Option{}
-		n.Use(authv3.NewAuthMiddleware(o))
-	}
+	n.Use(mock.NewDummyAuthMiddleware())
 	n.UseHandler(r)
 
 	s := http.Server{
