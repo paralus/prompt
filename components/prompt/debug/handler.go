@@ -34,9 +34,11 @@ var upgrader = websocket.Upgrader{
 }
 
 type debugHandler struct {
-	sp      sentryrpcv2.SentryPool
-	tmpPath string
-	dev     bool
+	sp         sentryrpcv2.SentryPool
+	tmpPath    string
+	dev        bool
+	kubectlBin string
+	auditFile  string
 }
 
 type reqAuth struct {
@@ -198,9 +200,9 @@ func (h *debugHandler) Handle(w http.ResponseWriter, r *http.Request, ps httprou
 
 		execArgs = append(execArgs, "api-resources")
 
-		_, err = exec.Command("/opt/rafay/kubectl", execArgs...).Output()
+		_, err = exec.Command(h.kubectlBin, execArgs...).Output()
 		if err == nil {
-			cmdExec := exec.Command("/opt/rafay/kubectl", execArgs...)
+			cmdExec := exec.Command(h.kubectlBin, execArgs...)
 			err = cmdExec.Run()
 		}
 	}()
@@ -256,7 +258,7 @@ func (h *debugHandler) Handle(w http.ResponseWriter, r *http.Request, ps httprou
 	go func() {
 
 		p := prompt.New(
-			kube.NewIOExecutor(rw, uint16(rowsUint), uint16(colsUint), args, event),
+			kube.NewIOExecutor(rw, uint16(rowsUint), uint16(colsUint), args, event, h.kubectlBin, h.auditFile),
 			c.Complete,
 			prompt.OptionParser(prompt.NewIOParser(uint16(rowsUint), uint16(colsUint), rw)),
 			prompt.OptionWriter(prompt.NewIOWriter(rw)),
@@ -280,11 +282,13 @@ func (h *debugHandler) Handle(w http.ResponseWriter, r *http.Request, ps httprou
 }
 
 // NewDebugHandler returns debug handler
-func NewDebugHandler(sp sentryrpcv2.SentryPool, tmpPath string, dev bool) httprouter.Handle {
+func NewDebugHandler(sp sentryrpcv2.SentryPool, tmpPath string, dev bool, kubectlBin, auditFile string) httprouter.Handle {
 	dh := &debugHandler{
-		sp:      sp,
-		tmpPath: tmpPath,
-		dev:     dev,
+		sp:         sp,
+		tmpPath:    tmpPath,
+		dev:        dev,
+		kubectlBin: kubectlBin,
+		auditFile:  auditFile,
 	}
 
 	return dh.Handle

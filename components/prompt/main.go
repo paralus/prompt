@@ -26,6 +26,8 @@ const (
 	tmpPathEnv    = "TEMP_PATH"
 	devEnv        = "DEV"
 	rpcPortEnv    = "RPC_PORT"
+	kubectlBinEnv = "KUBECTL_BIN"
+	auditFileEnv  = "AUDIT_LOG_FILE"
 )
 
 var (
@@ -35,6 +37,8 @@ var (
 	dev        bool
 	authAddr   string
 	rpcPort    int
+	kubectlBin string
+	auditFile  string
 
 	sp sentryrpcv2.SentryPool
 
@@ -54,6 +58,8 @@ func setup() {
 	viper.SetDefault(tmpPathEnv, "/tmp")
 	viper.SetDefault(devEnv, true)
 	viper.SetDefault(authAddrEnv, "authsrv.rcloud-admin.svc.cluster.local:50011")
+	viper.SetDefault(kubectlBinEnv, "/usr/local/bin/kubectl")
+	viper.SetDefault(auditFileEnv, "/var/log/ztka-prompt/audit.log")
 
 	viper.BindEnv(apiPortEnv)
 	viper.BindEnv(rpcPortEnv)
@@ -61,6 +67,8 @@ func setup() {
 	viper.BindEnv(tmpPathEnv)
 	viper.BindEnv(devEnv)
 	viper.BindEnv(authAddrEnv)
+	viper.BindEnv(kubectlBinEnv)
+	viper.BindEnv(auditFileEnv)
 
 	apiPort = viper.GetInt(apiPortEnv)
 	rpcPort = viper.GetInt(rpcPortEnv)
@@ -68,6 +76,8 @@ func setup() {
 	tmpPath = viper.GetString(tmpPathEnv)
 	dev = viper.GetBool(devEnv)
 	authAddr = viper.GetString(authAddrEnv)
+	kubectlBin = viper.GetString(kubectlBinEnv)
+	auditFile = viper.GetString(auditFileEnv)
 
 	sp = sentryrpcv2.NewSentryPool(sentryAddr, 10)
 
@@ -80,7 +90,7 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 
 	r := httprouter.New()
 
-	dh := debug.NewDebugHandler(sp, tmpPath, dev)
+	dh := debug.NewDebugHandler(sp, tmpPath, dev, kubectlBin, auditFile)
 
 	r.ServeFiles("/v2/debug/ui/*filepath", intdev.DevFS)
 	r.Handle("GET", "/v2/debug/prompt/project/:project_id/cluster/:cluster_name", dh)

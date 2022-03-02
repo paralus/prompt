@@ -35,14 +35,14 @@ func isInteractive(s string) bool {
 }
 
 // NewIOExecutor returns executor tied to io ReadWriter
-func NewIOExecutor(rw io.ReadWriter, rows, cols uint16, args []string, event *audit.Event) prompt.Executor {
+func NewIOExecutor(rw io.ReadWriter, rows, cols uint16, args []string, event *audit.Event, kubectlBin, auditFile string) prompt.Executor {
 	return func(ctx context.Context, s string) {
 		s = strings.Trim(s, " ")
 		if s == "" {
 			return
 		}
 
-		createKubectlCommandAudit(event, "kubectl "+s)
+		createKubectlCommandAudit(event, "kubectl "+s, auditFile)
 
 		// handle prompt clear
 		if strings.Index(s, "clear") >= 0 {
@@ -67,7 +67,7 @@ func NewIOExecutor(rw io.ReadWriter, rows, cols uint16, args []string, event *au
 		if isInteractive(s) {
 			_log.Debugw("executing interactive kubectl", "args", s)
 
-			cmd := exec.CommandContext(ctx, "/opt/rafay/kubectl", execArgs...)
+			cmd := exec.CommandContext(ctx, kubectlBin, execArgs...)
 			cmd.Env = append(cmd.Env, os.Environ()...)
 			cmd.Env = append(cmd.Env, "KUBE_EDITOR=vim")
 
@@ -110,7 +110,7 @@ func NewIOExecutor(rw io.ReadWriter, rows, cols uint16, args []string, event *au
 			}
 		}
 
-		cmd := exec.CommandContext(ctx, "/opt/rafay/kubectl", execArgs...)
+		cmd := exec.CommandContext(ctx, kubectlBin, execArgs...)
 		out, err := cmd.CombinedOutput()
 		if err != nil {
 			_log.Infow("unable to run command", "error", err)
@@ -127,7 +127,7 @@ func NewIOExecutor(rw io.ReadWriter, rows, cols uint16, args []string, event *au
 }
 
 // createKubectlCommandAudit send the kubectl command audit event to the audit.log file
-func createKubectlCommandAudit(event *audit.Event, command string) {
+func createKubectlCommandAudit(event *audit.Event, command string, auditFile string) {
 	if event == nil {
 		_log.Errorw("Event is nil")
 		return
@@ -144,7 +144,7 @@ func createKubectlCommandAudit(event *audit.Event, command string) {
 		return
 	}
 
-	f, err := os.OpenFile("audit.log", os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+	f, err := os.OpenFile(auditFile, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
 	defer f.Close()
 	if err != nil {
 		_log.Errorw("unable to open audit file", "error", err)
