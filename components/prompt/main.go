@@ -20,12 +20,10 @@ import (
 )
 
 const (
-	authAddrEnv   = "AUTH_ADDR"
 	apiPortEnv    = "API_PORT"
 	sentryAddrEnv = "SENTRY_ADDR"
 	tmpPathEnv    = "TEMP_PATH"
 	devEnv        = "DEV"
-	rpcPortEnv    = "RPC_PORT"
 	kubectlBinEnv = "KUBECTL_BIN"
 	auditFileEnv  = "AUDIT_LOG_FILE"
 )
@@ -35,8 +33,6 @@ var (
 	sentryAddr string
 	tmpPath    string
 	dev        bool
-	authAddr   string
-	rpcPort    int
 	kubectlBin string
 	auditFile  string
 
@@ -53,29 +49,23 @@ var upgrader = websocket.Upgrader{
 
 func setup() {
 	viper.SetDefault(apiPortEnv, 7009)
-	viper.SetDefault(rpcPortEnv, 7010)
 	viper.SetDefault(sentryAddrEnv, "localhost:10000")
 	viper.SetDefault(tmpPathEnv, "/tmp")
 	viper.SetDefault(devEnv, true)
-	viper.SetDefault(authAddrEnv, "authsrv.rcloud-admin.svc.cluster.local:50011")
 	viper.SetDefault(kubectlBinEnv, "/usr/local/bin/kubectl")
 	viper.SetDefault(auditFileEnv, "/var/log/ztka-prompt/audit.log")
 
 	viper.BindEnv(apiPortEnv)
-	viper.BindEnv(rpcPortEnv)
 	viper.BindEnv(sentryAddrEnv)
 	viper.BindEnv(tmpPathEnv)
 	viper.BindEnv(devEnv)
-	viper.BindEnv(authAddrEnv)
 	viper.BindEnv(kubectlBinEnv)
 	viper.BindEnv(auditFileEnv)
 
 	apiPort = viper.GetInt(apiPortEnv)
-	rpcPort = viper.GetInt(rpcPortEnv)
 	sentryAddr = viper.GetString(sentryAddrEnv)
 	tmpPath = viper.GetString(tmpPathEnv)
 	dev = viper.GetBool(devEnv)
-	authAddr = viper.GetString(authAddrEnv)
 	kubectlBin = viper.GetString(kubectlBinEnv)
 	auditFile = viper.GetString(auditFileEnv)
 
