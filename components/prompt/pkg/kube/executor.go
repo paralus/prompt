@@ -10,8 +10,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/RafaySystems/rcloud-base/components/common/pkg/audit"
-	logv2 "github.com/RafaySystems/rcloud-base/components/common/pkg/log"
+	"github.com/RafaySystems/rcloud-base/pkg/audit"
+	logv2 "github.com/RafaySystems/rcloud-base/pkg/log"
 	"github.com/RafaySystems/ztka/components/prompt/pkg/prompt"
 	"github.com/creack/pty"
 )

@@ -3,8 +3,8 @@ package mock
 import (
 	"net/http"
 
-	authv3 "github.com/RafaySystems/rcloud-base/components/common/pkg/auth/v3"
-	commonv3 "github.com/RafaySystems/rcloud-base/components/common/proto/types/commonpb/v3"
+	authv3 "github.com/RafaySystems/rcloud-base/pkg/auth/v3"
+	commonv3 "github.com/RafaySystems/rcloud-base/proto/types/commonpb/v3"
 	"github.com/urfave/negroni"
 )
 
