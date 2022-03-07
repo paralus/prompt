@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="/v2/debug/ui/node_modules/xterm/css/xterm.css" />
+  <script src="/v2/debug/ui/node_modules/xterm/lib/xterm.js"></script>
+  <script src="/v2/debug/ui/node_modules/xterm-addon-attach/lib/xterm-addon-attach.js"></script>
+  <script src="/v2/debug/ui/node_modules/xterm-addon-fit/lib/xterm-addon-fit.js"></script>
+</head>
+
+<body>
+  
+  <button onclick="kubeShell()">kube-shell</button>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  Command(base64): <input type="text" id="myCommand" value="get pods">
+  &nbsp;&nbsp;
+  <button onclick="kubeCTL()">kubectl</button>
+  <div id="terminal"></div>
+
+  <script>
+    function get(name) {
+      if (name = (new RegExp('[?&]' + encodeURIComponent(name) + '=([^&]*)')).exec(location.search))
+        return decodeURIComponent(name[1]);
+    };
+    var socket
+    const term = new Terminal({ fontSize: 12, rows: 45 });
+    const fitAddon = new FitAddon.FitAddon();
+    term.loadAddon(fitAddon);
+    term.open(document.getElementById('terminal'));
+    fitAddon.fit();
+
+    function kubeCTL(cmdargs) {
+      term.clear()
+      if (socket != null) {
+        socket.close()
+      }
+      project = get("project")
+      clusterName = get("clusterName")
+      cmd = document.getElementById("myCommand").value;
+      cmdargs = window.btoa(cmd);
+
+
+      var loc = window.location, ws_url;
+      if (loc.protocol === "https:") {
+        ws_url = "wss:";
+      } else {
+        ws_url = "ws:";
+      }
+      ws_url += "//" + loc.host;
+      ws_url += "/v2/debug/prompt/project/"+ project +"/cluster/"+ clusterName +"?rows=" + term.rows + "&cols=" + term.cols + "&cargs=" + cmdargs
+      
+      socket = new WebSocket(ws_url, "binary");
+
+      socket.onopen = function (event) {
+        attachAddon = new AttachAddon.AttachAddon(socket);
+        term.loadAddon(attachAddon);
+      }
+
+    }
+
+    function kubeShell() {
+      term.clear()
+      if (socket != null) {
+        socket.close()
+      }
+      project = get("project")
+      clusterName = get("clusterName")
+
+      console.log(term.rows);
+      console.log(term.cols);
+
+      var loc = window.location, ws_url;
+      if (loc.protocol === "https:") {
+        ws_url = "wss:";
+      } else {
+        ws_url = "ws:";
+      }
+      ws_url += "//" + loc.host;
+      ws_url += "/v2/debug/prompt/project/"+ project +"/cluster/"+ clusterName +"?rows=" + term.rows + "&cols=" + term.cols
+
+      socket = new WebSocket(ws_url, "binary");
+
+      socket.onopen = function (event) {
+        attachAddon = new AttachAddon.AttachAddon(socket);
+        term.loadAddon(attachAddon);
+      }
+    }
+
+  </script>
+</body>
+
+</html>
