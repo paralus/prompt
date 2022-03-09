@@ -7,11 +7,11 @@ import (
 )
 
 var configSetCredentialsOptions = []prompt.Suggest{
-	prompt.Suggest{Text: "--auth-provider", Description: "Auth provider for the user entry in kubeconfig"},
-	prompt.Suggest{Text: "--auth-provider-arg", Description: "'key=value' arguments for the auth provider"},
-	prompt.Suggest{Text: "--embed-certs", Description: "Embed client cert/key for the user entry in kubeconfig"},
-	prompt.Suggest{Text: "--exec-api-version", Description: "API version of the exec credential plugin for the user entry in kubeconfig"},
-	prompt.Suggest{Text: "--exec-arg", Description: "New arguments for the exec credential plugin command for the user entry in kubeconfig"},
-	prompt.Suggest{Text: "--exec-command", Description: "Command for the exec credential plugin for the user entry in kubeconfig"},
-	prompt.Suggest{Text: "--exec-env", Description: "'key=value' environment values for the exec credential plugin"},
+	{Text: "--auth-provider", Description: "Auth provider for the user entry in kubeconfig"},
+	{Text: "--auth-provider-arg", Description: "'key=value' arguments for the auth provider"},
+	{Text: "--embed-certs", Description: "Embed client cert/key for the user entry in kubeconfig"},
+	{Text: "--exec-api-version", Description: "API version of the exec credential plugin for the user entry in kubeconfig"},
+	{Text: "--exec-arg", Description: "New arguments for the exec credential plugin command for the user entry in kubeconfig"},
+	{Text: "--exec-command", Description: "Command for the exec credential plugin for the user entry in kubeconfig"},
+	{Text: "--exec-env", Description: "'key=value' environment values for the exec credential plugin"},
 }

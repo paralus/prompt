@@ -7,6 +7,6 @@ import (
 )
 
 var explainOptions = []prompt.Suggest{
-	prompt.Suggest{Text: "--api-version", Description: "Get different explanations for particular API version"},
-	prompt.Suggest{Text: "--recursive", Description: "Print the fields of fields (Currently only 1 level deep)"},
+	{Text: "--api-version", Description: "Get different explanations for particular API version"},
+	{Text: "--recursive", Description: "Print the fields of fields (Currently only 1 level deep)"},
 }
