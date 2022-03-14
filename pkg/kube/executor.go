@@ -18,7 +18,6 @@ import (
 
 var _log = logv2.GetLogger()
 var brokers = []string{"kafka-core:9092"}
-var producer, _ = audit.NewProducer(brokers)
 
 func isInteractive(s string) bool {
 
