@@ -10,17 +10,29 @@ file to communicate with API server of a cluster.
 cp <kube-config-file-path> kubeconfig.yaml
 ```
 
-2. Start a Prompt server:
+2. Set `KUBECTL_BIN` to your local kubectl bin path:
+
+```
+export KUBECTL_BIN=$(which kubectl)
+```
+
+3. Set `AUDIT_LOG_FILE`:
+
+```
+export AUDIT_LOG_FILE=$(pwd)/audit.log
+```
+
+4. Start a Prompt server:
 
 ```
 go run .
 ```
 
-3. Open below URL in your browser:
+5. Open below URL in your browser:
 
 ```
 http://localhost:7009/v2/debug/ui/
 ```
 
-4. Click on "kube-shell" button then you will be able to run all
+6. Click on "kube-shell" button then you will be able to run all
    kubectl commands from UI.
