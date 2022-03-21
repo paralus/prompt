@@ -7,10 +7,10 @@ import (
 	"sync"
 	"time"
 
+	"github.com/RafaySystems/prompt/debug"
 	authv3 "github.com/RafaySystems/rcloud-base/pkg/auth/v3"
 	logv2 "github.com/RafaySystems/rcloud-base/pkg/log"
 	sentryrpcv2 "github.com/RafaySystems/rcloud-base/proto/rpc/sentry"
-	"github.com/RafaySystems/prompt/debug"
 	"github.com/gorilla/websocket"
 	"github.com/julienschmidt/httprouter"
 	"github.com/spf13/viper"

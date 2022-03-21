@@ -7,7 +7,7 @@ import (
 )
 
 var cordonOptions = []prompt.Suggest{
-	prompt.Suggest{Text: "--dry-run", Description: "If true, only print the object that would be sent, without sending it."},
-	prompt.Suggest{Text: "-l", Description: "Selector (label query) to filter on"},
-	prompt.Suggest{Text: "--selector", Description: "Selector (label query) to filter on"},
+	{Text: "--dry-run", Description: "If true, only print the object that would be sent, without sending it."},
+	{Text: "-l", Description: "Selector (label query) to filter on"},
+	{Text: "--selector", Description: "Selector (label query) to filter on"},
 }

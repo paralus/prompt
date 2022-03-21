@@ -7,11 +7,11 @@ import (
 	"sync"
 	"time"
 
-	logv2 "github.com/RafaySystems/rcloud-base/pkg/log"
-	sentryrpcv2 "github.com/RafaySystems/rcloud-base/proto/rpc/sentry"
 	"github.com/RafaySystems/prompt/debug"
 	"github.com/RafaySystems/prompt/internal/dev/mock"
 	ui "github.com/RafaySystems/prompt/internal/dev/ui"
+	logv2 "github.com/RafaySystems/rcloud-base/pkg/log"
+	sentryrpcv2 "github.com/RafaySystems/rcloud-base/proto/rpc/sentry"
 	"github.com/gorilla/websocket"
 	"github.com/julienschmidt/httprouter"
 	"github.com/spf13/viper"

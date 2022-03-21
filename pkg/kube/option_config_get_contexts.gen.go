@@ -7,7 +7,7 @@ import (
 )
 
 var configGetContextsOptions = []prompt.Suggest{
-	prompt.Suggest{Text: "--no-headers", Description: "When using the default or custom-column output format, don't print headers (default print headers)."},
-	prompt.Suggest{Text: "-o", Description: "Output format. One of: name"},
-	prompt.Suggest{Text: "--output", Description: "Output format. One of: name"},
+	{Text: "--no-headers", Description: "When using the default or custom-column output format, don't print headers (default print headers)."},
+	{Text: "-o", Description: "Output format. One of: name"},
+	{Text: "--output", Description: "Output format. One of: name"},
 }
