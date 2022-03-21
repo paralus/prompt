@@ -10,14 +10,13 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/RafaySystems/prompt/pkg/prompt"
 	"github.com/RafaySystems/rcloud-base/pkg/audit"
 	logv2 "github.com/RafaySystems/rcloud-base/pkg/log"
-	"github.com/RafaySystems/prompt/pkg/prompt"
 	"github.com/creack/pty"
 )
 
 var _log = logv2.GetLogger()
-var brokers = []string{"kafka-core:9092"}
 
 func isInteractive(s string) bool {
 
