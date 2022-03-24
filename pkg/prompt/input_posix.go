@@ -6,7 +6,7 @@ package prompt
 import (
 	"syscall"
 
-	"github.com/RafaySystems/prompt/pkg/prompt/internal/term"
+	"github.com/RafayLabs/prompt/pkg/prompt/internal/term"
 	"golang.org/x/sys/unix"
 )
 

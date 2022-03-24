@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"runtime"
 
-	prompt "github.com/RafaySystems/prompt/pkg/prompt"
-	"github.com/RafaySystems/prompt/pkg/prompt/internal/debug"
+	prompt "github.com/RafayLabs/prompt/pkg/prompt"
+	"github.com/RafayLabs/prompt/pkg/prompt/internal/debug"
 )
 
 var (

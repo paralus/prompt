@@ -3,7 +3,7 @@
 package kube
 
 import (
-	prompt "github.com/RafaySystems/prompt/pkg/prompt"
+	prompt "github.com/RafayLabs/prompt/pkg/prompt"
 )
 
 var rolloutResumeOptions = []prompt.Suggest{

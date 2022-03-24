@@ -5,7 +5,7 @@ import (
 	"io"
 	"os/exec"
 
-	logv2 "github.com/RafaySystems/rcloud-base/pkg/log"
+	logv2 "github.com/RafayLabs/rcloud-base/pkg/log"
 
 	"github.com/creack/pty"
 	"github.com/gorilla/websocket"

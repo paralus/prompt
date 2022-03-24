@@ -8,7 +8,7 @@ import (
 
 	"github.com/gorilla/websocket"
 
-	"github.com/RafaySystems/prompt/pkg/ptyio"
+	"github.com/RafayLabs/prompt/pkg/ptyio"
 )
 
 var upgrader = websocket.Upgrader{
