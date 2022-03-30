@@ -3,7 +3,7 @@ module github.com/RafayLabs/prompt
 go 1.17
 
 require (
-	github.com/RafayLabs/rcloud-base v0.0.0-20220324105308-8aa0982e3067
+	github.com/RafayLabs/rcloud-base v0.0.0-20220330114454-0803f2898714
 	github.com/creack/pty v1.1.11
 	github.com/gorilla/websocket v1.4.2
 	github.com/julienschmidt/httprouter v1.3.0
@@ -26,8 +26,10 @@ require (
 	github.com/Shopify/sarama v1.32.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/casbin/casbin/v2 v2.40.6 // indirect
+	github.com/casbin/gorm-adapter/v3 v3.4.6 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/denisenkom/go-mssqldb v0.11.0 // indirect
 	github.com/eapache/go-resiliency v1.2.0 // indirect
 	github.com/eapache/go-xerial-snappy v0.0.0-20180814174437-776d5712da21 // indirect
 	github.com/eapache/queue v1.1.0 // indirect
@@ -35,7 +37,9 @@ require (
 	github.com/evanphx/json-patch v4.12.0+incompatible // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/go-logr/logr v1.2.0 // indirect
+	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
+	github.com/golang-sql/civil v0.0.0-20190719163853-cb61b32ac6fe // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
@@ -48,12 +52,21 @@ require (
 	github.com/hashicorp/go-uuid v1.0.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/imdario/mergo v0.3.12 // indirect
+	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
+	github.com/jackc/pgconn v1.10.1-0.20211002123621-290ee79d1e8d // indirect
+	github.com/jackc/pgio v1.0.0 // indirect
+	github.com/jackc/pgpassfile v1.0.0 // indirect
+	github.com/jackc/pgproto3/v2 v2.1.1 // indirect
+	github.com/jackc/pgservicefile v0.0.0-20200714003250-2b9c44734f2b // indirect
+	github.com/jackc/pgtype v1.8.1 // indirect
+	github.com/jackc/pgx/v4 v4.13.0 // indirect
 	github.com/jcmturner/aescts/v2 v2.0.0 // indirect
 	github.com/jcmturner/dnsutils/v2 v2.0.0 // indirect
 	github.com/jcmturner/gofork v1.0.0 // indirect
 	github.com/jcmturner/gokrb5/v8 v8.4.2 // indirect
 	github.com/jcmturner/rpc/v2 v2.0.3 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.4 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.14.4 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
@@ -85,6 +98,7 @@ require (
 	github.com/subosito/gotenv v1.2.0 // indirect
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect
 	github.com/uptrace/bun v1.0.20 // indirect
+	github.com/uptrace/bun/dialect/pgdialect v1.0.20 // indirect
 	github.com/uptrace/bun/driver/pgdriver v1.0.20 // indirect
 	github.com/valyala/fastjson v1.6.3 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
@@ -106,6 +120,11 @@ require (
 	gopkg.in/ini.v1 v1.66.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
+	gorm.io/driver/mysql v1.1.2 // indirect
+	gorm.io/driver/postgres v1.2.2 // indirect
+	gorm.io/driver/sqlserver v1.2.1 // indirect
+	gorm.io/gorm v1.22.5 // indirect
+	gorm.io/plugin/dbresolver v1.1.0 // indirect
 	k8s.io/apiextensions-apiserver v0.23.4 // indirect
 	k8s.io/component-base v0.23.4 // indirect
 	k8s.io/klog v1.0.0 // indirect
