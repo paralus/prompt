@@ -4,8 +4,8 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/RafaySystems/prompt/pkg/prompt/internal/bisect"
-	istrings "github.com/RafaySystems/prompt/pkg/prompt/internal/strings"
+	"github.com/RafayLabs/prompt/pkg/prompt/internal/bisect"
+	istrings "github.com/RafayLabs/prompt/pkg/prompt/internal/strings"
 	runewidth "github.com/mattn/go-runewidth"
 )
 

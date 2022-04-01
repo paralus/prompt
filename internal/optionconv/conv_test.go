@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/RafaySystems/prompt/internal/optionconv"
-	prompt "github.com/RafaySystems/prompt/pkg/prompt"
+	"github.com/RafayLabs/prompt/internal/optionconv"
+	prompt "github.com/RafayLabs/prompt/pkg/prompt"
 )
 
 func ExampleGetOptionsFromHelpText() {

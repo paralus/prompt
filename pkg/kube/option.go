@@ -3,7 +3,7 @@ package kube
 import (
 	"strings"
 
-	prompt "github.com/RafaySystems/prompt/pkg/prompt"
+	prompt "github.com/RafayLabs/prompt/pkg/prompt"
 )
 
 func optionCompleter(args []string, long bool) []prompt.Suggest {

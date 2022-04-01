@@ -1,7 +1,7 @@
 package prompt
 
 import (
-	"github.com/RafaySystems/prompt/pkg/prompt/internal/debug"
+	"github.com/RafayLabs/prompt/pkg/prompt/internal/debug"
 	runewidth "github.com/mattn/go-runewidth"
 )
 

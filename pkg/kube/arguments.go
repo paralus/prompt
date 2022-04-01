@@ -1,6 +1,6 @@
 package kube
 
-import prompt "github.com/RafaySystems/prompt/pkg/prompt"
+import prompt "github.com/RafayLabs/prompt/pkg/prompt"
 
 var commands = []prompt.Suggest{
 	{Text: "get", Description: "Display one or many resources"},

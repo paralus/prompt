@@ -4,7 +4,7 @@ ZTKA Prompt is built on top of kube-prompt, this is integrated in the web consol
 
 ![Software License](https://img.shields.io/badge/license-apache-brightgreen.svg?style=flat-square)
 
-An interactive kubernetes client featuring auto-complete using [go-prompt](https://github.com/RafaySystems/prompt/pkg/prompt).
+An interactive kubernetes client featuring auto-complete using [go-prompt](https://github.com/RafayLabs/prompt/pkg/prompt).
 
 ![demo](https://github.com/c-bata/assets/raw/master/kube-prompt/kube-prompt.gif)
 
@@ -21,7 +21,7 @@ web-1144924021-pqmfq        1/1     Running     4       25d
 ```
 
 ## Installation for development
-[dev-installation](https://github.com/RafaySystems/prompt/blob/main/internal/dev/README.md): Follow these steps for development.
+[dev-installation](https://github.com/RafayLabs/prompt/blob/main/internal/dev/README.md): Follow these steps for development.
 
 ## Similar projects
 
