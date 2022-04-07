@@ -3,7 +3,6 @@ package kube
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"io"
 	"os"
 	"os/exec"
@@ -14,6 +13,7 @@ import (
 	"github.com/RafayLabs/rcloud-base/pkg/audit"
 	logv2 "github.com/RafayLabs/rcloud-base/pkg/log"
 	"github.com/creack/pty"
+	"go.uber.org/zap"
 )
 
 var _log = logv2.GetLogger()
@@ -33,14 +33,14 @@ func isInteractive(s string) bool {
 }
 
 // NewIOExecutor returns executor tied to io ReadWriter
-func NewIOExecutor(rw io.ReadWriter, rows, cols uint16, args []string, event *audit.Event, kubectlBin, auditFile string) prompt.Executor {
+func NewIOExecutor(rw io.ReadWriter, rows, cols uint16, args []string, event *audit.Event, kubectlBin string, auditLogger *zap.Logger) prompt.Executor {
 	return func(ctx context.Context, s string) {
 		s = strings.Trim(s, " ")
 		if s == "" {
 			return
 		}
 
-		createKubectlCommandAudit(event, "kubectl "+s, auditFile)
+		createKubectlCommandAudit(event, "kubectl "+s, auditLogger)
 
 		// handle prompt clear
 		if strings.Index(s, "clear") >= 0 {
@@ -125,7 +125,7 @@ func NewIOExecutor(rw io.ReadWriter, rows, cols uint16, args []string, event *au
 }
 
 // createKubectlCommandAudit send the kubectl command audit event to the audit.log file
-func createKubectlCommandAudit(event *audit.Event, command string, auditFile string) {
+func createKubectlCommandAudit(event *audit.Event, command string, auditLogger *zap.Logger) {
 	if event == nil {
 		_log.Errorw("Event is nil")
 		return
@@ -135,22 +135,5 @@ func createKubectlCommandAudit(event *audit.Event, command string, auditFile str
 	event.Category = audit.AuditCategory
 	event.Origin = audit.OriginCluster
 
-	// Dump event to audit.log file
-	data, err := json.Marshal(event)
-	if err != nil {
-		_log.Errorw("unable to format event to JSON", "error", err)
-		return
-	}
-
-	f, err := os.OpenFile(auditFile, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
-	defer f.Close()
-	if err != nil {
-		_log.Errorw("unable to open audit file", "error", err)
-		return
-	}
-	_, err = f.Write(append(data, '\n'))
-	if err != nil {
-		_log.Errorw("unable to write to audit file", "error", err)
-		return
-	}
+	go audit.WriteEvent(event, auditLogger)
 }

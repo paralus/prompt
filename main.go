@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/RafayLabs/prompt/debug"
+	"github.com/RafayLabs/rcloud-base/pkg/audit"
 	authv3 "github.com/RafayLabs/rcloud-base/pkg/auth/v3"
 	logv2 "github.com/RafayLabs/rcloud-base/pkg/log"
 	sentryrpcv2 "github.com/RafayLabs/rcloud-base/proto/rpc/sentry"
@@ -76,7 +77,15 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	dh := debug.NewDebugHandler(sp, tmpPath, kubectlBin, auditFile)
+	ao := audit.AuditOptions{
+		LogPath:    auditFile,
+		MaxSizeMB:  1,
+		MaxBackups: 10, // Should we let sidecar do rotation?
+		MaxAgeDays: 10, // Make these configurable via env
+	}
+	auditLogger := audit.GetAuditLogger(&ao)
+
+	dh := debug.NewDebugHandler(sp, tmpPath, kubectlBin, auditLogger)
 
 	r := httprouter.New()
 	r.Handle("GET", "/v2/debug/prompt/project/:project_id/cluster/:cluster_name", dh)
@@ -84,9 +93,11 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 	n := negroni.New(
 		negroni.NewRecovery(),
 	)
+
 	if !dev {
 		o := authv3.Option{}
-		n.Use(authv3.NewAuthMiddleware(o))
+
+		n.Use(authv3.NewAuthMiddleware(auditLogger, o))
 	}
 	n.UseHandler(r)
 
