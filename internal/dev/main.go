@@ -10,6 +10,7 @@ import (
 	"github.com/RafayLabs/prompt/debug"
 	"github.com/RafayLabs/prompt/internal/dev/mock"
 	ui "github.com/RafayLabs/prompt/internal/dev/ui"
+	"github.com/RafayLabs/rcloud-base/pkg/audit"
 	logv2 "github.com/RafayLabs/rcloud-base/pkg/log"
 	sentryrpcv2 "github.com/RafayLabs/rcloud-base/proto/rpc/sentry"
 	"github.com/gorilla/websocket"
@@ -67,7 +68,14 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 
 	r := httprouter.New()
 
-	dh := debug.NewDebugHandler(sp, tmpPath, kubectlBin, auditFile)
+	ao := audit.AuditOptions{
+		LogPath:    auditFile,
+		MaxSizeMB:  1,
+		MaxBackups: 10,
+		MaxAgeDays: 10,
+	}
+	auditLogger := audit.GetAuditLogger(&ao)
+	dh := debug.NewDebugHandler(sp, tmpPath, kubectlBin, auditLogger)
 
 	r.ServeFiles("/v2/debug/ui/*filepath", http.FS(ui.Files))
 	r.Handle("GET", "/v2/debug/prompt/project/:project_id/cluster/:cluster_name", dh)

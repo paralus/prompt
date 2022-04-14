@@ -19,12 +19,13 @@ import (
 	"github.com/RafayLabs/prompt/pkg/prompt"
 	"github.com/RafayLabs/prompt/pkg/prompt/completer"
 	"github.com/RafayLabs/rcloud-base/pkg/audit"
-	authv3 "github.com/RafayLabs/rcloud-base/pkg/auth/v3"
+	"github.com/RafayLabs/rcloud-base/pkg/service"
 	sentryrpcv2 "github.com/RafayLabs/rcloud-base/proto/rpc/sentry"
 	ctypesv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	"github.com/gorilla/websocket"
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/xid"
+	"go.uber.org/zap"
 )
 
 var upgrader = websocket.Upgrader{
@@ -34,10 +35,10 @@ var upgrader = websocket.Upgrader{
 }
 
 type debugHandler struct {
-	sp         sentryrpcv2.SentryPool
-	tmpPath    string
-	kubectlBin string
-	auditFile  string
+	sp          sentryrpcv2.SentryPool
+	tmpPath     string
+	kubectlBin  string
+	auditLogger *zap.Logger
 }
 
 type reqAuth struct {
@@ -53,9 +54,11 @@ type reqAuth struct {
 }
 
 func (h *debugHandler) getAuth(r *http.Request, ps httprouter.Params) (*reqAuth, error) {
-	sd, ok := authv3.GetSession(r.Context())
+	// sd, ok := authv3.GetSession(r.Context())
+	sd, ok := service.GetSessionDataFromContext(r.Context())
+
 	if !ok {
-		return nil, errors.New("Failed to get session data")
+		return nil, errors.New("failed to get session data")
 	}
 
 	// TODO: Fill in all fields
@@ -257,7 +260,7 @@ func (h *debugHandler) Handle(w http.ResponseWriter, r *http.Request, ps httprou
 	go func() {
 
 		p := prompt.New(
-			kube.NewIOExecutor(rw, uint16(rowsUint), uint16(colsUint), args, event, h.kubectlBin, h.auditFile),
+			kube.NewIOExecutor(rw, uint16(rowsUint), uint16(colsUint), args, event, h.kubectlBin, h.auditLogger),
 			c.Complete,
 			prompt.OptionParser(prompt.NewIOParser(uint16(rowsUint), uint16(colsUint), rw)),
 			prompt.OptionWriter(prompt.NewIOWriter(rw)),
@@ -281,12 +284,12 @@ func (h *debugHandler) Handle(w http.ResponseWriter, r *http.Request, ps httprou
 }
 
 // NewDebugHandler returns debug handler
-func NewDebugHandler(sp sentryrpcv2.SentryPool, tmpPath, kubectlBin, auditFile string) httprouter.Handle {
+func NewDebugHandler(sp sentryrpcv2.SentryPool, tmpPath, kubectlBin string, auditLogger *zap.Logger) httprouter.Handle {
 	dh := &debugHandler{
-		sp:         sp,
-		tmpPath:    tmpPath,
-		kubectlBin: kubectlBin,
-		auditFile:  auditFile,
+		sp:          sp,
+		tmpPath:     tmpPath,
+		kubectlBin:  kubectlBin,
+		auditLogger: auditLogger,
 	}
 
 	return dh.Handle
@@ -365,18 +368,14 @@ func (h *debugHandler) GetEventForKubectlCommands(r *http.Request, auth *reqAuth
 	}
 
 	event := audit.Event{
-		Portal:         "ADMIN",
-		PartnerID:      auth.Partner,
-		OrganizationID: auth.Organization,
-		ProjectID:      auth.ProjectID,
-		Type:           "kubectl.command.detail",
-		Detail:         &audit.EventDetail{},
+		Portal:    "ADMIN",
+		ProjectID: auth.ProjectID,
+		Type:      "kubectl.command.detail",
+		Detail:    &audit.EventDetail{},
 		Actor: &audit.EventActor{
-			Type:           "USER",
-			PartnerID:      auth.Partner,
-			OrganizationID: auth.Organization,
-			Account:        account,
-			Groups:         auth.Groups,
+			Type:    "USER",
+			Account: account,
+			Groups:  auth.Groups,
 		},
 		Client: &audit.EventClient{
 			Type:      "BROWSER",
