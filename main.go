@@ -12,6 +12,8 @@ import (
 	authv3 "github.com/RafayLabs/rcloud-base/pkg/auth/v3"
 	logv2 "github.com/RafayLabs/rcloud-base/pkg/log"
 	sentryrpcv2 "github.com/RafayLabs/rcloud-base/proto/rpc/sentry"
+	systemrpc "github.com/RafayLabs/rcloud-base/proto/rpc/system"
+	userrpc "github.com/RafayLabs/rcloud-base/proto/rpc/user"
 	"github.com/gorilla/websocket"
 	"github.com/julienschmidt/httprouter"
 	"github.com/spf13/viper"
@@ -26,6 +28,7 @@ const (
 	devEnv        = "DEV"
 	kubectlBinEnv = "KUBECTL_BIN"
 	auditFileEnv  = "AUDIT_LOG_FILE"
+	usernameEnv   = "USER_NAME"
 )
 
 var (
@@ -36,7 +39,9 @@ var (
 	kubectlBin string
 	auditFile  string
 
-	sp sentryrpcv2.SentryPool
+	sp  sentryrpcv2.SentryPool
+	pp  systemrpc.SystemPool
+	ugp userrpc.UGPool
 
 	_log = logv2.GetLogger()
 )
@@ -54,6 +59,7 @@ func setup() {
 	viper.SetDefault(devEnv, true)
 	viper.SetDefault(kubectlBinEnv, "/usr/local/bin/kubectl")
 	viper.SetDefault(auditFileEnv, "/var/log/ztka-prompt/audit.log")
+	viper.SetDefault(usernameEnv, "")
 
 	viper.BindEnv(apiPortEnv)
 	viper.BindEnv(sentryAddrEnv)
@@ -61,6 +67,7 @@ func setup() {
 	viper.BindEnv(devEnv)
 	viper.BindEnv(kubectlBinEnv)
 	viper.BindEnv(auditFileEnv)
+	viper.BindEnv(usernameEnv)
 
 	apiPort = viper.GetInt(apiPortEnv)
 	sentryAddr = viper.GetString(sentryAddrEnv)
@@ -70,6 +77,8 @@ func setup() {
 	auditFile = viper.GetString(auditFileEnv)
 
 	sp = sentryrpcv2.NewSentryPool(sentryAddr, 10)
+	pp = systemrpc.NewSystemPool(sentryAddr, 10)
+	ugp = userrpc.NewUGPool(sentryAddr, 10)
 }
 
 func runAPI(wg *sync.WaitGroup, ctx context.Context) {
@@ -85,10 +94,10 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 	}
 	auditLogger := audit.GetAuditLogger(&ao)
 
-	dh := debug.NewDebugHandler(sp, tmpPath, kubectlBin, auditLogger)
+	dh := debug.NewDebugHandler(sp, pp, ugp, tmpPath, kubectlBin, auditLogger)
 
 	r := httprouter.New()
-	r.Handle("GET", "/v2/debug/prompt/project/:project_id/cluster/:cluster_name", dh)
+	r.Handle("GET", "/v2/debug/prompt/project/:project/cluster/:cluster_name", dh)
 
 	n := negroni.New(
 		negroni.NewRecovery(),

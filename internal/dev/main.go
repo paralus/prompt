@@ -13,6 +13,8 @@ import (
 	"github.com/RafayLabs/rcloud-base/pkg/audit"
 	logv2 "github.com/RafayLabs/rcloud-base/pkg/log"
 	sentryrpcv2 "github.com/RafayLabs/rcloud-base/proto/rpc/sentry"
+	systemrpc "github.com/RafayLabs/rcloud-base/proto/rpc/system"
+	userrpc "github.com/RafayLabs/rcloud-base/proto/rpc/user"
 	"github.com/gorilla/websocket"
 	"github.com/julienschmidt/httprouter"
 	"github.com/spf13/viper"
@@ -33,6 +35,8 @@ var (
 	kubectlBin string
 	auditFile  string
 	sp         sentryrpcv2.SentryPool
+	pp         systemrpc.SystemPool
+	ugp        userrpc.UGPool
 	_log       = logv2.GetLogger()
 )
 
@@ -59,6 +63,8 @@ func setup() {
 	auditFile = viper.GetString(auditFileEnv)
 
 	sp = &mock.SentryPool{}
+	pp = &mock.SystemPool{}
+	ugp = &mock.UGPool{}
 }
 
 func runAPI(wg *sync.WaitGroup, ctx context.Context) {
@@ -75,10 +81,10 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 		MaxAgeDays: 10,
 	}
 	auditLogger := audit.GetAuditLogger(&ao)
-	dh := debug.NewDebugHandler(sp, tmpPath, kubectlBin, auditLogger)
+	dh := debug.NewDebugHandler(sp, pp, ugp, tmpPath, kubectlBin, auditLogger)
 
 	r.ServeFiles("/v2/debug/ui/*filepath", http.FS(ui.Files))
-	r.Handle("GET", "/v2/debug/prompt/project/:project_id/cluster/:cluster_name", dh)
+	r.Handle("GET", "/v2/debug/prompt/project/:project/cluster/:cluster_name", dh)
 
 	n := negroni.New(
 		negroni.NewRecovery(),
