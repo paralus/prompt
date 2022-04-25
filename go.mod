@@ -3,7 +3,7 @@ module github.com/RafayLabs/prompt
 go 1.17
 
 require (
-	github.com/RafayLabs/rcloud-base v0.0.0-20220422070223-d65b14d91486
+	github.com/RafayLabs/rcloud-base v0.0.0-20220425123133-b90e4724d36b
 	github.com/creack/pty v1.1.11
 	github.com/gorilla/websocket v1.4.2
 	github.com/julienschmidt/httprouter v1.3.0
