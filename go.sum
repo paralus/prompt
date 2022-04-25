@@ -127,8 +127,8 @@ github.com/PuerkitoBio/purell v1.1.0/go.mod h1:c11w/QuzBsJSee3cPx9rAFu61PvFxuPbt
 github.com/PuerkitoBio/purell v1.1.1/go.mod h1:c11w/QuzBsJSee3cPx9rAFu61PvFxuPbtSwDGJws/X0=
 github.com/PuerkitoBio/urlesc v0.0.0-20160726150825-5bd2802263f2/go.mod h1:uGdkoq3SwY9Y+13GIhn11/XLaGBb4BfwItxLd5jeuXE=
 github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578/go.mod h1:uGdkoq3SwY9Y+13GIhn11/XLaGBb4BfwItxLd5jeuXE=
-github.com/RafayLabs/rcloud-base v0.0.0-20220422070223-d65b14d91486 h1:JjKrhcqgaNwiCzap7nPn636m0kE1saOQ5j9sgV4D16s=
-github.com/RafayLabs/rcloud-base v0.0.0-20220422070223-d65b14d91486/go.mod h1:zv3sRxgoiQTk9MS1xv8ER26qWVBrW0nuTaq3mdLHD3Q=
+github.com/RafayLabs/rcloud-base v0.0.0-20220425123133-b90e4724d36b h1:iuUoBz51I9TKhWjQZGkO3db2khUwY/361q8Jc2ymXVQ=
+github.com/RafayLabs/rcloud-base v0.0.0-20220425123133-b90e4724d36b/go.mod h1:zv3sRxgoiQTk9MS1xv8ER26qWVBrW0nuTaq3mdLHD3Q=
 github.com/Shopify/logrus-bugsnag v0.0.0-20171204204709-577dee27f20d/go.mod h1:HI8ITrYtUY+O+ZhtlqUnD8+KwNPOyugEhfP9fdUIaEQ=
 github.com/Shopify/sarama v1.19.0/go.mod h1:FVkBWblsNy7DGZRfXLU0O9RCGt5g3g3yEuWXgklEdEo=
 github.com/Shopify/sarama v1.32.0/go.mod h1:+EmJJKZWVT/faR9RcOxJerP+LId4iWdQPBGLy1Y1Njs=

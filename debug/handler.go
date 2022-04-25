@@ -24,8 +24,6 @@ import (
 	systemrpc "github.com/RafayLabs/rcloud-base/proto/rpc/system"
 	userrpc "github.com/RafayLabs/rcloud-base/proto/rpc/user"
 	ctypesv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	systemv3 "github.com/RafayLabs/rcloud-base/proto/types/systempb/v3"
-	userv3 "github.com/RafayLabs/rcloud-base/proto/types/userpb/v3"
 	"github.com/gorilla/websocket"
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/xid"
@@ -62,89 +60,23 @@ type reqAuth struct {
 
 func (h *debugHandler) getAuth(r *http.Request, ps httprouter.Params) (*reqAuth, error) {
 
-	var sd *ctypesv3.SessionData
-	if !isDevMode() {
-		sd, ok := service.GetSessionDataFromContext(r.Context())
-		if !ok {
-			return nil, errors.New("failed to get session data")
-		}
-		_log.Infow("running in production mode", "account", sd.Account)
-	} else {
-		username := getUsername()
-		user, err := h.getAccountInformation(r.Context(), username)
-		if err != nil {
-			return nil, errors.New("unable to fetch user information")
-		}
-		sd := &ctypesv3.SessionData{
-			Account:  user.Metadata.Id,
-			Username: username,
-		}
-		_log.Infow("running in dev mode", "account", sd.Account)
+	sd, ok := service.GetSessionDataFromContext(r.Context())
+	if !ok {
+		return nil, errors.New("failed to get session data")
 	}
+	_log.Infow("running in production mode", "account", sd.Account)
 
-	project, err := h.getProjectMetaInformation(r.Context(), ps.ByName("project"))
-	if err != nil {
-		return nil, errors.New("unable to fetch project information")
-	}
-	_log.Infow("project meta information: ", "project", project.Metadata.Id, " organization", project.Metadata.Organization, " partner", project.Metadata.Partner)
-
-	// TODO: Fill in all fields
 	auth := &reqAuth{
 		Account:      sd.GetAccount(),
-		Partner:      project.Metadata.Partner,
-		Organization: project.Metadata.Organization,
-		ProjectID:    project.Metadata.Id,
+		Partner:      sd.GetPartner(),
+		Organization: sd.GetOrganization(),
+		ProjectID:    sd.GetProject().GetList()[0].GetProjectId(),
 		IsSSOUser:    sd.GetIsSsoUser(),
 		Username:     sd.GetUsername(),
 		Groups:       sd.GetGroups(),
 	}
 
 	return auth, nil
-}
-
-func (h *debugHandler) getAccountInformation(ctx context.Context, username string) (*userv3.User, error) {
-	nCtx, cancel := context.WithTimeout(ctx, time.Second*10)
-	defer cancel()
-	ugc, err := h.ugp.NewClient(nCtx)
-	if err != nil {
-		return nil, err
-	}
-	defer ugc.Close()
-
-	user, err := ugc.GetUser(nCtx, &userv3.User{Metadata: &ctypesv3.Metadata{Name: username}})
-	if err != nil {
-		return nil, err
-	}
-
-	return user, nil
-}
-
-func (h *debugHandler) getProjectMetaInformation(ctx context.Context, projectName string) (*systemv3.Project, error) {
-	nCtx, cancel := context.WithTimeout(ctx, time.Second*20)
-	defer cancel()
-	pc, err := h.pp.NewClient(nCtx)
-	if err != nil {
-		return nil, err
-	}
-	defer pc.Close()
-
-	project, err := pc.GetProject(nCtx, &systemv3.Project{Metadata: &ctypesv3.Metadata{Name: projectName}})
-	if err != nil {
-		return nil, err
-	}
-	organization, err := pc.GetOrganization(nCtx, &systemv3.Organization{Metadata: &ctypesv3.Metadata{Name: project.Metadata.Organization}})
-	if err != nil {
-		return nil, err
-	}
-	partner, err := pc.GetPartner(nCtx, &systemv3.Partner{Metadata: &ctypesv3.Metadata{Name: organization.Metadata.Partner}})
-	if err != nil {
-		return nil, err
-	}
-
-	//update project with organization id and partner id
-	project.Metadata.Organization = organization.Metadata.Id
-	project.Metadata.Partner = partner.Metadata.Id
-	return project, nil
 }
 
 func (h *debugHandler) getKubeConfig(ctx context.Context, auth *reqAuth, clusterName, nameSpace string, isSystemSession bool) ([]byte, error) {
