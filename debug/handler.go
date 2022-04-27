@@ -377,7 +377,6 @@ func PruneCacheDirs(ctx context.Context, root string) {
 
 func (h *debugHandler) GetEventForKubectlCommands(r *http.Request, auth *reqAuth, clusterName string) (*audit.Event, error) {
 	account := audit.EventActorAccount{
-		ID:       auth.Account,
 		Username: auth.Username,
 	}
 
