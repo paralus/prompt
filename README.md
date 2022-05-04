@@ -1,6 +1,6 @@
 ZTKA Prompt is built on top of kube-prompt, this is integrated in the web console ui.
 
-# kube-prompt
+# prompt
 
 ![Software License](https://img.shields.io/badge/license-apache-brightgreen.svg?style=flat-square)
 
