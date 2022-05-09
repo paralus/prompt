@@ -106,7 +106,7 @@ func runAPI(wg *sync.WaitGroup, ctx context.Context) {
 	if !dev {
 		o := authv3.Option{}
 
-		n.Use(authv3.NewAuthMiddleware(auditLogger, o))
+		n.Use(authv3.NewRemoteAuthMiddleware(auditLogger, sentryAddr, o))
 	}
 	n.UseHandler(r)
 

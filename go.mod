@@ -3,7 +3,7 @@ module github.com/RafayLabs/prompt
 go 1.17
 
 require (
-	github.com/RafayLabs/rcloud-base v0.0.0-20220426160409-26bf93a86cf0
+	github.com/RafayLabs/rcloud-base v0.0.0-20220510051421-08eec70c1186
 	github.com/creack/pty v1.1.11
 	github.com/gorilla/websocket v1.4.2
 	github.com/julienschmidt/httprouter v1.3.0
@@ -78,8 +78,6 @@ require (
 	github.com/segmentio/encoding v0.3.4 // indirect
 	github.com/shurcooL/httpfs v0.0.0-20190707220628-8d4bc4ba7749 // indirect
 	github.com/shurcooL/vfsgen v0.0.0-20200824052919-0d455de96546 // indirect
-	github.com/spacemonkeygo/httpsig v0.0.0-20181218213338-2605ae379e47 // indirect
-	github.com/speps/go-hashids v2.0.0+incompatible // indirect
 	github.com/spf13/afero v1.6.0 // indirect
 	github.com/spf13/cast v1.4.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
