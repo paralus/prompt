@@ -51,6 +51,7 @@ type reqAuth struct {
 	Partner            string
 	Organization       string
 	ProjectID          string
+	Project            string
 	IsSSOUser          bool
 	Username           string
 	Groups             []string
@@ -71,6 +72,7 @@ func (h *debugHandler) getAuth(r *http.Request, ps httprouter.Params) (*reqAuth,
 		Partner:      sd.GetPartner(),
 		Organization: sd.GetOrganization(),
 		ProjectID:    sd.GetProject().GetList()[0].GetProjectId(),
+		Project:      sd.GetProject().GetList()[0].GetProject(),
 		IsSSOUser:    sd.GetIsSsoUser(),
 		Username:     sd.GetUsername(),
 		Groups:       sd.GetGroups(),
@@ -381,10 +383,10 @@ func (h *debugHandler) GetEventForKubectlCommands(r *http.Request, auth *reqAuth
 	}
 
 	event := audit.Event{
-		Portal:    "ADMIN",
-		ProjectID: auth.ProjectID,
-		Type:      "kubectl.command.detail",
-		Detail:    &audit.EventDetail{},
+		Portal:  "ADMIN",
+		Project: auth.Project,
+		Type:    "kubectl.command.detail",
+		Detail:  &audit.EventDetail{},
 		Actor: &audit.EventActor{
 			Type:    "USER",
 			Account: account,

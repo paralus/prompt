@@ -20,3 +20,4 @@ vendor/
 
 internal/dev/kubeconfig.yaml
 internal/dev/audit.log
+prompt
