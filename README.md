@@ -1,4 +1,4 @@
-ZTKA Prompt is built on top of kube-prompt, this is integrated in the web console ui.
+Paralus Prompt is built on top of kube-prompt, this is integrated in the web console ui.
 
 # kube-prompt
 
@@ -21,6 +21,7 @@ web-1144924021-pqmfq        1/1     Running     4       25d
 ```
 
 ## Installation for development
+
 [dev-installation](https://github.com/RafayLabs/prompt/blob/main/internal/dev/README.md): Follow these steps for development.
 
 ## Similar projects
