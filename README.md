@@ -1,10 +1,10 @@
 Paralus Prompt is built on top of kube-prompt, this is integrated in the web console ui.
 
-# kube-prompt
+## kube-prompt
 
 ![Software License](https://img.shields.io/badge/license-apache-brightgreen.svg?style=flat-square)
 
-An interactive kubernetes client featuring auto-complete using [go-prompt](https://github.com/RafayLabs/prompt/pkg/prompt).
+An interactive kubernetes client featuring auto-complete using [go-prompt](https://github.com/paralus/prompt/pkg/prompt).
 
 ![demo](https://github.com/c-bata/assets/raw/master/kube-prompt/kube-prompt.gif)
 
@@ -20,9 +20,11 @@ web-1144924021-5r1fg        1/1     Running     4       25d
 web-1144924021-pqmfq        1/1     Running     4       25d
 ```
 
-## Installation for development
+### Installation for development
 
-[dev-installation](https://github.com/RafayLabs/prompt/blob/main/internal/dev/README.md): Follow these steps for development.
+Follow these steps for development:
+
+[dev-installation](https://github.com/paralus/prompt/blob/main/internal/dev/README.md)
 
 ## Similar projects
 
