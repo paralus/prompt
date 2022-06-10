@@ -5,8 +5,8 @@ import (
 	"sync"
 	"time"
 
-	logv2 "github.com/RafayLabs/rcloud-base/pkg/log"
 	"github.com/gorilla/websocket"
+	logv2 "github.com/paralus/paralus/pkg/log"
 )
 
 var (

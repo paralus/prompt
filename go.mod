@@ -1,14 +1,14 @@
-module github.com/RafayLabs/prompt
+module github.com/paralus/prompt
 
 go 1.17
 
 require (
-	github.com/RafayLabs/rcloud-base v0.0.0-20220523065807-9a9629f3efb5
 	github.com/creack/pty v1.1.11
 	github.com/gorilla/websocket v1.4.2
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/mattn/go-runewidth v0.0.8
 	github.com/mxk/go-flowrate v0.0.0-20140419014527-cca7078d478f
+	github.com/paralus/paralus v0.0.0-20220610083417-845812b5f7f2
 	github.com/pkg/term v0.0.0-20180423043932-cda20d4ac917
 	github.com/rs/xid v1.3.0
 	github.com/spf13/viper v1.10.1

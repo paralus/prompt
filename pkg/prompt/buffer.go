@@ -3,7 +3,7 @@ package prompt
 import (
 	"strings"
 
-	"github.com/RafayLabs/prompt/pkg/prompt/internal/debug"
+	"github.com/paralus/prompt/pkg/prompt/internal/debug"
 )
 
 // Buffer emulates the console buffer.

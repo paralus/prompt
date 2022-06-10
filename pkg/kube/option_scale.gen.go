@@ -3,7 +3,7 @@
 package kube
 
 import (
-	prompt "github.com/RafayLabs/prompt/pkg/prompt"
+	prompt "github.com/paralus/prompt/pkg/prompt"
 )
 
 var scaleOptions = []prompt.Suggest{

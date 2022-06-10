@@ -8,8 +8,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/RafayLabs/prompt/internal/debug"
-	prompt "github.com/RafayLabs/prompt/pkg/prompt"
+	"github.com/paralus/prompt/internal/debug"
+	prompt "github.com/paralus/prompt/pkg/prompt"
 	appsv1 "k8s.io/api/apps/v1"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"

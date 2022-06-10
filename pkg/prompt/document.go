@@ -4,9 +4,9 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/RafayLabs/prompt/pkg/prompt/internal/bisect"
-	istrings "github.com/RafayLabs/prompt/pkg/prompt/internal/strings"
 	runewidth "github.com/mattn/go-runewidth"
+	"github.com/paralus/prompt/pkg/prompt/internal/bisect"
+	istrings "github.com/paralus/prompt/pkg/prompt/internal/strings"
 )
 
 // Document has text displayed in terminal and cursor position.

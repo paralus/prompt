@@ -1,8 +1,8 @@
 package prompt
 
 import (
-	"github.com/RafayLabs/prompt/pkg/prompt/internal/debug"
 	runewidth "github.com/mattn/go-runewidth"
+	"github.com/paralus/prompt/pkg/prompt/internal/debug"
 )
 
 // Render to render prompt information from state of Buffer.

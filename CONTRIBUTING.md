@@ -39,7 +39,7 @@ Once you have started the server, you can navigate to `http://localhost:7009/v2/
 Click on kube-shell button to start a connection.
 
 ## Code Structure
-The following section lists out the code structure for prompt repo: https://github.com/RafayLabs/prompt 
+The following section lists out the code structure for prompt repo: https://github.com/paralus/prompt 
 
 ```
 components
