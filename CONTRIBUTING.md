@@ -4,17 +4,16 @@ Yes, because we feel that it’s the best way to build and improve a product. It
 
 We are always on the lookout for anything that can improve the product. Be it feature requests, issues/bugs, code or content, we’d love to see what you’ve got to make this better. If you’ve got anything exciting and would love to contribute, this is the right place to begin your journey as a contributor to Paralus and the larger open source community.
 
-## How to get started?
-
-The easiest way to start is to look at existing issues and see if there’s something there that you’d like to work on. You can filter issues with the label “Good first issue” which are relatively self sufficient issues and great for first time contributors.
+**How to get started?**
+The easiest way to start is to look at existing issues and see if there’s something there that you’d like to work on. You can filter issues with the label [“[Good first issue](https://github.com/paralus/prompt/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)” which are relatively self sufficient issues and great for first time contributors.
 
 Once you decide on an issue, please comment on it so that all of us know that you’re on it.
 
-If you’re looking to add a new feature, raise a new issue and start a discussion with the community. Engage with the maintainers of the project and work your way through.
+If you’re looking to add a new feature, [raise a new issue](https://github.com/paralus/prompt/issues/new) and start a discussion with the community. Engage with the maintainers of the project and work your way through.
 
-## Prompt
+# Prompt
 
-Paralus Prompt is built on top of kube-prompt, this is integrated in the web console UI. kube-prompt accepts the same commands as the kubectl, except you don't need to provide the kubectl prefix. So it doesn't require the additional cost to use this cli.
+Paralus Prompt is built on top of kube-prompt, this is integrated in the dashboard. kube-prompt accepts the same commands as the kubectl, except you don't need to provide the kubectl prefix. So it doesn't require the additional cost to use this cli.
 
 ### Development setup
 
@@ -39,21 +38,8 @@ Once you have this setup, you can run the following to start the development ser
 Once you have started the server, you can navigate to `http://localhost:7009/v2/debug/ui/` in your browser to view the debug UI.
 Click on kube-shell button to start a connection.
 
-## Code Structure
-The following section lists out the code structure for prompt repo: https://github.com/Paralus/prompt 
-
-```
-components
-├── prompt
-│   ├── internal
-│   ├── pkg
-│   │   └── service
-│   ├── Dockerfile.prompt
-│   └── main.go
-```
-
 ## Need Help?
 
-We’re there for you - the best part of being a part of an open source community. If you are stuck somewhere or are facing an issue or just don’t know how to get started, feel free to let us know.
+If you are interested to contribute to prompt but are stuck with any of the steps, feel free to reach out to us. Please [create an issue](https://github.com/paralus/prompt/issues/new) in this repository describing your issue and we'll take it up from there.
 
-You can reach out to us via our Slack Channel or Twitter.
+You can reach out to us via our [Slack Channel](https://join.slack.com/t/paralus/shared_invite/zt-1a9x6y729-ySmAq~I3tjclEG7nDoXB0A) or [Twitter](https://twitter.com/paralus_).

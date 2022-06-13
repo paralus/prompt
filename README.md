@@ -1,4 +1,8 @@
-Paralus Prompt is built on top of kube-prompt, this is integrated in the web console ui.
+# Prompt
+
+Paralus Prompt is built on top of kube-prompt, this is integrated in the dashboard. kube-prompt accepts the same commands as the kubectl, except you don't need to provide the kubectl prefix. So it doesn't require the additional cost to use this cli.
+
+<img src="https://website-git-namespace-paralus.vercel.app/img/docs/importcluster-kubectl.png" alt="Paralus Prompt in action" height="50%" widht="50%"/>
 
 ## kube-prompt
 
@@ -22,47 +26,19 @@ web-1144924021-pqmfq        1/1     Running     4       25d
 
 ### Installation for development
 
-Follow these steps for development:
+For local development and setup, follow the steps mentioned in [dev-installation](https://github.com/paralus/prompt/tree/main/internal/dev) document.
 
-[dev-installation](https://github.com/paralus/prompt/blob/main/internal/dev/README.md)
+## Community & Support
 
-## Similar projects
+- Visit [Paralus website](https://paralus.io) for the complete documentation and helpful links.
+- Join our [Slack channel](https://join.slack.com/t/paralus/shared_invite/zt-1a9x6y729-ySmAq~I3tjclEG7nDoXB0A) to post your queries and discuss features.
+- Tweet to [@paralus_](https://twitter.com/paralus_/) on Twitter.
+- Create [GitHub Issues](https://github.com/paralus/paralus/issues) to report bugs or request features.
 
-* [kube-shell](https://github.com/cloudnativelabs/kube-shell): An integrated shell for working with the Kubernetes written in Python using [python-prompt-toolkit](https://github.com/prompt-toolkit/python-prompt-toolkit).
+## Contributing
 
-## Goal
+The easiest way to start is to look at existing issues and see if there’s something there that you’d like to work on. You can filter issues with the label “Good first issue” which are relatively self sufficient issues and great for first time contributors.
 
-Hopefully support following commands enough to operate kubernetes.
+Once you decide on an issue, please comment on it so that all of us know that you’re on it.
 
-* [x] `get`            Display one or many resources
-* [x] `describe`       Show details of a specific resource or group of resources
-* [x] `create`         Create a resource by filename or stdin
-* [x] `replace`        Replace a resource by filename or stdin.
-* [x] `patch`          Update field(s) of a resource using strategic merge patch.
-* [x] `delete`         Delete resources by filenames, stdin, resources and names, or by resources and label selector.
-* [x] `edit`           Edit a resource on the server
-* [x] `apply`          Apply a configuration to a resource by filename or stdin
-* [x] `namespace`      SUPERSEDED: Set and view the current Kubernetes namespace
-* [x] `logs`           Print the logs for a container in a pod.
-* [x] `rolling-update` Perform a rolling update of the given ReplicationController.
-* [x] `scale`          Set a new size for a Deployment, ReplicaSet, Replication Controller, or Job.
-* [x] `cordon`         Mark node as unschedulable
-* [x] `drain`          Drain node in preparation for maintenance
-* [x] `uncordon`       Mark node as schedulable
-* [x] `attach`         Attach to a running container.
-* [x] `exec`           Execute a command in a container.
-* [x] `port-forward`   Forward one or more local ports to a pod.
-* [x] `proxy`          Run a proxy to the Kubernetes API server
-* [x] `run`            Run a particular image on the cluster.
-* [x] `expose`         Take a replication controller, service, or pod and expose it as a new Kubernetes Service
-* [x] `autoscale`      Auto-scale a Deployment, ReplicaSet, or ReplicationController
-* [x] `rollout`        rollout manages a deployment
-* [x] `label`          Update the labels on a resource
-* [x] `annotate`       Update the annotations on a resource
-* [x] `config`         config modifies kubeconfig files
-* [x] `cluster-info`   Display cluster info
-* [x] `api-versions`   Print the supported API versions on the server, in the form of "group/version".
-* [x] `version`        Print the client and server version information.
-* [x] `explain`        Documentation of resources.
-* [x] `convert`        Convert config files between different API versions
-* [x] `top`            Display Resource (CPU/Memory/Storage) usage
+If you’re looking to add a new feature, raise a [new issue](https://github.com/paralus/prompt/issues) and start a discussion with the community. Engage with the maintainers of the project and work your way through.
