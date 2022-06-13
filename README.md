@@ -33,7 +33,7 @@ For local development and setup, follow the steps mentioned in [dev-installation
 - Visit [Paralus website](https://paralus.io) for the complete documentation and helpful links.
 - Join our [Slack channel](https://join.slack.com/t/paralus/shared_invite/zt-1a9x6y729-ySmAq~I3tjclEG7nDoXB0A) to post your queries and discuss features.
 - Tweet to [@paralus_](https://twitter.com/paralus_/) on Twitter.
-- Create [GitHub Issues](https://github.com/paralus/paralus/issues) to report bugs or request features.
+- Create [GitHub Issues](https://github.com/paralus/prompt/issues) to report bugs or request features.
 
 ## Contributing
 
