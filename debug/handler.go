@@ -15,17 +15,17 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/RafayLabs/prompt/pkg/kube"
-	"github.com/RafayLabs/prompt/pkg/prompt"
-	"github.com/RafayLabs/prompt/pkg/prompt/completer"
-	"github.com/RafayLabs/rcloud-base/pkg/audit"
-	"github.com/RafayLabs/rcloud-base/pkg/service"
-	sentryrpcv2 "github.com/RafayLabs/rcloud-base/proto/rpc/sentry"
-	systemrpc "github.com/RafayLabs/rcloud-base/proto/rpc/system"
-	userrpc "github.com/RafayLabs/rcloud-base/proto/rpc/user"
-	ctypesv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
 	"github.com/gorilla/websocket"
 	"github.com/julienschmidt/httprouter"
+	"github.com/paralus/paralus/pkg/audit"
+	"github.com/paralus/paralus/pkg/service"
+	sentryrpcv2 "github.com/paralus/paralus/proto/rpc/sentry"
+	systemrpc "github.com/paralus/paralus/proto/rpc/system"
+	userrpc "github.com/paralus/paralus/proto/rpc/user"
+	ctypesv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	"github.com/paralus/prompt/pkg/kube"
+	"github.com/paralus/prompt/pkg/prompt"
+	"github.com/paralus/prompt/pkg/prompt/completer"
 	"github.com/rs/xid"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -109,7 +109,7 @@ func (h *debugHandler) getKubeConfig(ctx context.Context, auth *reqAuth, cluster
 		selector = append(selector, fmt.Sprintf("project/%s", auth.ProjectID))
 	}
 	if clusterName != "all" {
-		selector = append(selector, fmt.Sprintf("rafay.dev/clusterName=%s", clusterName))
+		selector = append(selector, fmt.Sprintf("paralus.dev/clusterName=%s", clusterName))
 	}
 
 	opts.Selector = strings.Join(selector, ",")
@@ -270,7 +270,7 @@ func (h *debugHandler) Handle(w http.ResponseWriter, r *http.Request, ps httprou
 			c.Complete,
 			prompt.OptionParser(prompt.NewIOParser(uint16(rowsUint), uint16(colsUint), rw)),
 			prompt.OptionWriter(prompt.NewIOWriter(rw)),
-			prompt.OptionTitle("rafay-prompt: interactive kubernetes client"),
+			prompt.OptionTitle("paralus-prompt: interactive kubernetes client"),
 			prompt.OptionPrefix("kubectl "),
 			prompt.OptionPrefixTextColor(prompt.Green),
 			prompt.OptionInputTextColor(prompt.Yellow),

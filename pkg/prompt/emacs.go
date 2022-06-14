@@ -1,6 +1,6 @@
 package prompt
 
-import "github.com/RafayLabs/prompt/pkg/prompt/internal/debug"
+import "github.com/paralus/prompt/pkg/prompt/internal/debug"
 
 /*
 

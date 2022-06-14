@@ -3,9 +3,9 @@ package mock
 import (
 	"context"
 
-	userrpc "github.com/RafayLabs/rcloud-base/proto/rpc/user"
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	userv3 "github.com/RafayLabs/rcloud-base/proto/types/userpb/v3"
+	userrpc "github.com/paralus/paralus/proto/rpc/user"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	userv3 "github.com/paralus/paralus/proto/types/userpb/v3"
 	"google.golang.org/grpc"
 )
 

@@ -9,10 +9,10 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/RafayLabs/prompt/pkg/prompt"
-	"github.com/RafayLabs/rcloud-base/pkg/audit"
-	logv2 "github.com/RafayLabs/rcloud-base/pkg/log"
 	"github.com/creack/pty"
+	"github.com/paralus/paralus/pkg/audit"
+	logv2 "github.com/paralus/paralus/pkg/log"
+	"github.com/paralus/prompt/pkg/prompt"
 	"go.uber.org/zap"
 )
 
