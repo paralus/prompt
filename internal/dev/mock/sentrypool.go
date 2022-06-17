@@ -5,9 +5,9 @@ import (
 	"os"
 	"path"
 
-	sentryrpcv2 "github.com/RafayLabs/rcloud-base/proto/rpc/sentry"
-	commnopbv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
+	sentryrpcv2 "github.com/paralus/paralus/proto/rpc/sentry"
+	commnopbv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
 	"google.golang.org/grpc"
 )
 

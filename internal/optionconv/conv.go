@@ -4,7 +4,7 @@ import (
 	"errors"
 	"strings"
 
-	prompt "github.com/RafayLabs/prompt/pkg/prompt"
+	prompt "github.com/paralus/prompt/pkg/prompt"
 )
 
 func GetOptionsFromHelpText(help string) (options string, err error) {

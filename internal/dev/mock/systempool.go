@@ -3,9 +3,9 @@ package mock
 import (
 	"context"
 
-	systemrpc "github.com/RafayLabs/rcloud-base/proto/rpc/system"
-	commonv3 "github.com/RafayLabs/rcloud-base/proto/types/commonpb/v3"
-	systemv3 "github.com/RafayLabs/rcloud-base/proto/types/systempb/v3"
+	systemrpc "github.com/paralus/paralus/proto/rpc/system"
+	commonv3 "github.com/paralus/paralus/proto/types/commonpb/v3"
+	systemv3 "github.com/paralus/paralus/proto/types/systempb/v3"
 	"google.golang.org/grpc"
 )
 

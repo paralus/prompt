@@ -4,6 +4,7 @@ Paralus Prompt is built on top of kube-prompt, this is integrated in the dashboa
 
 <img src="https://website-git-namespace-paralus.vercel.app/img/docs/importcluster-kubectl.png" alt="Paralus Prompt in action" height="50%" widht="50%"/>
 
+
 ## Installation & Setup
 
 For local development and setup, follow the steps mentioned in [dev-installation](https://github.com/paralus/prompt/tree/main/internal/dev) document.

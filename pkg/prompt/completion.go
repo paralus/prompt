@@ -3,8 +3,8 @@ package prompt
 import (
 	"strings"
 
-	"github.com/RafayLabs/prompt/pkg/prompt/internal/debug"
 	runewidth "github.com/mattn/go-runewidth"
+	"github.com/paralus/prompt/pkg/prompt/internal/debug"
 )
 
 const (

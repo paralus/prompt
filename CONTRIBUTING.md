@@ -38,6 +38,19 @@ Once you have this setup, you can run the following to start the development ser
 Once you have started the server, you can navigate to `http://localhost:7009/v2/debug/ui/` in your browser to view the debug UI.
 Click on kube-shell button to start a connection.
 
+## Code Structure
+The following section lists out the code structure for prompt repo: https://github.com/paralus/prompt 
+
+```
+components
+├── prompt
+│   ├── internal
+│   ├── pkg
+│   │   └── service
+│   ├── Dockerfile.prompt
+│   └── main.go
+```
+
 ## Need Help?
 
 If you are interested to contribute to prompt but are stuck with any of the steps, feel free to reach out to us. Please [create an issue](https://github.com/paralus/prompt/issues/new) in this repository describing your issue and we'll take it up from there.
