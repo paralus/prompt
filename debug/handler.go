@@ -170,13 +170,13 @@ func (h *debugHandler) Handle(w http.ResponseWriter, r *http.Request, ps httprou
 
 	clusterName := ps.ByName("cluster_name")
 
-	nameSpace := r.URL.Query().Get("namespace")
+	nameSpace := sanitizeValue(r.URL.Query().Get("namespace"))
 
-	command := r.URL.Query().Get("cargs")
+	command := sanitizeValue(r.URL.Query().Get("cargs"))
 	if command != "" {
 		decod, err := base64.StdEncoding.DecodeString(command)
 		if err == nil {
-			decodedCmd = string(decod)
+			decodedCmd = sanitizeValue(string((decod)))
 		}
 	}
 	_log.Infow("Handle", "post router", ps, "nameSpace", nameSpace, "command", command, "decoded", decodedCmd)
@@ -402,4 +402,9 @@ func (h *debugHandler) GetEventForKubectlCommands(r *http.Request, auth *reqAuth
 	event.Detail.Meta = make(map[string]string)
 	event.Detail.Meta["cluster_name"] = clusterName
 	return &event, nil
+}
+
+func sanitizeValue(input string) string {
+	sanitisedValue := strings.Replace(input, "\n", "", -1)
+	return strings.Replace(sanitisedValue, "\r", "", -1)
 }
