@@ -18,7 +18,7 @@ func (p *UGPool) NewClient(ctx context.Context) (userrpc.UGClient, error) {
 }
 
 type UGClient struct {
-	userrpc.UserClient
+	userrpc.UserServiceClient
 }
 
 func (kcc UGClient) GetUser(ctx context.Context, in *userv3.User, opts ...grpc.CallOption) (*userv3.User, error) {
