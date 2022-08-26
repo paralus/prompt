@@ -8,7 +8,7 @@ require (
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/mattn/go-runewidth v0.0.8
 	github.com/mxk/go-flowrate v0.0.0-20140419014527-cca7078d478f
-	github.com/paralus/paralus v0.0.0-20220610083417-845812b5f7f2
+	github.com/paralus/paralus v0.1.3-0.20220826052930-27805eb460bd
 	github.com/pkg/term v0.0.0-20180423043932-cda20d4ac917
 	github.com/rs/xid v1.3.0
 	github.com/spf13/viper v1.10.1

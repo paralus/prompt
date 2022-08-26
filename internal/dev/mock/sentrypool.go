@@ -20,8 +20,8 @@ func (p *SentryPool) NewClient(ctx context.Context) (sentryrpcv2.SentryClient, e
 }
 
 type SentryClient struct {
-	sentryrpcv2.BootstrapClient
-	sentryrpcv2.ClusterAuthorizationClient
+	sentryrpcv2.BootstrapServiceClient
+	sentryrpcv2.ClusterAuthorizationServiceClient
 	KubeConfigClient
 }
 

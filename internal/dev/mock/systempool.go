@@ -18,9 +18,9 @@ func (p *SystemPool) NewClient(ctx context.Context) (systemrpc.SystemClient, err
 }
 
 type SystemClient struct {
-	systemrpc.ProjectClient
-	systemrpc.OrganizationClient
-	systemrpc.PartnerClient
+	systemrpc.ProjectServiceClient
+	systemrpc.OrganizationServiceClient
+	systemrpc.PartnerServiceClient
 }
 
 func (kcc SystemClient) GetProject(ctx context.Context, in *systemv3.Project, opts ...grpc.CallOption) (*systemv3.Project, error) {
