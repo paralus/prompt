@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+### Changed
+- Modified release to use paralusci from [niravparikh05](https://github.com/niravparikh05)
+
 ## [0.1.1] - 2022-08-26
 ### Added
 ### Changed
