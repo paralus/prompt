@@ -36,26 +36,13 @@ jobs:
           # Getting go version from the go.mod file
           go-version-file: 'go.mod'
 
-      - name: vendor packages
-        run: go mod tidy && go mod vendor
-
       # Sanity check before publishing
       - name: Test all
         run: go test -v ./...
 
-      - name: Log in to the Container registry
-        uses: docker/login-action@v2
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-
-      - name: Build Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+      - name: Build an image from Dockerfile
+        run: |
+          docker build -f "Dockerfile" -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} .
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.10.0
