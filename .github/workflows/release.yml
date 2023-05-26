@@ -32,9 +32,6 @@ jobs:
           # Getting go version from the go.mod file
           go-version-file: 'go.mod'
 
-      - name: vendor packages
-        run: go mod tidy && go mod vendor
-
       # Sanity check before publishing
       - name: Test all
         run: go test -v ./...
@@ -51,8 +48,6 @@ jobs:
         uses: docker/metadata-action@c4ee3adeed93b1fa6a762f209fb01608c1a22f1e
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=ref,event=tag
 
       - name: Build and push Docker image
         uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
