@@ -7,6 +7,7 @@ require (
 	github.com/gorilla/websocket v1.4.2
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/mattn/go-runewidth v0.0.8
+	github.com/mattn/go-shellwords v1.0.12
 	github.com/mxk/go-flowrate v0.0.0-20140419014527-cca7078d478f
 	github.com/paralus/paralus v0.1.3-0.20220826052930-27805eb460bd
 	github.com/pkg/term v0.0.0-20180423043932-cda20d4ac917

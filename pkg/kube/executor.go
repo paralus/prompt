@@ -10,6 +10,7 @@ import (
 	"sync"
 
 	"github.com/creack/pty"
+	"github.com/mattn/go-shellwords"
 	"github.com/paralus/paralus/pkg/audit"
 	logv2 "github.com/paralus/paralus/pkg/log"
 	"github.com/paralus/prompt/pkg/prompt"
@@ -51,13 +52,14 @@ func NewIOExecutor(rw io.ReadWriter, rows, cols uint16, args []string, event *au
 		var execArgs []string
 
 		// appending kubectl commands to execute
-		for _, arg := range strings.Split(s, " ") {
-			if strings.TrimSpace(arg) != "" {
-				execArgs = append(execArgs, arg)
-			}
+		p, err := shellwords.Parse(s)
+		if err != nil {
+			_log.Error("unable to parse command", zap.Error(err))
+			return
 		}
+		execArgs = append(execArgs, p...)
 
-		// appending default flags to execArgs
+		// appending default flags
 		for _, arg := range args {
 			if strings.TrimSpace(arg) != "" {
 				execArgs = append(execArgs, arg)
