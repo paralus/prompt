@@ -19,7 +19,6 @@ import (
 var _log = logv2.GetLogger()
 
 func isInteractive(s string) bool {
-
 	switch {
 	case strings.Index(s, "exec") >= 0:
 	case strings.Index(s, "logs") >= 0:
@@ -50,13 +49,16 @@ func NewIOExecutor(rw io.ReadWriter, rows, cols uint16, args []string, event *au
 		}
 
 		var execArgs []string
-		for _, arg := range args {
+
+		// appending kubectl commands to execute
+		for _, arg := range strings.Split(s, " ") {
 			if strings.TrimSpace(arg) != "" {
 				execArgs = append(execArgs, arg)
 			}
 		}
 
-		for _, arg := range strings.Split(s, " ") {
+		// appending default flags to execArgs
+		for _, arg := range args {
 			if strings.TrimSpace(arg) != "" {
 				execArgs = append(execArgs, arg)
 			}
@@ -70,7 +72,6 @@ func NewIOExecutor(rw io.ReadWriter, rows, cols uint16, args []string, event *au
 			cmd.Env = append(cmd.Env, "KUBE_EDITOR=vim")
 
 			f, err := pty.StartWithSize(cmd, &pty.Winsize{Rows: rows, Cols: cols})
-
 			if err != nil {
 				rw.Write([]byte(err.Error()))
 				rw.Write([]byte{'\r', '\n'})
@@ -99,7 +100,7 @@ func NewIOExecutor(rw io.ReadWriter, rows, cols uint16, args []string, event *au
 
 		_log.Debugw("executing non interative kubectl", "args", execArgs)
 
-		if len(execArgs) > 3 && execArgs[2] == "config" {
+		if len(execArgs) > 3 && execArgs[0] == "config" {
 			// filter raw/flattern argument to avoid displaying cert data
 			for _, s := range execArgs {
 				if s == "--raw" || s == "--flatten" {
