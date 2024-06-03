@@ -1,6 +1,6 @@
 module github.com/paralus/prompt
 
-go 1.17
+go 1.21
 
 require (
 	github.com/creack/pty v1.1.11
