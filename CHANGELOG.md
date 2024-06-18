@@ -1,3 +1,8 @@
+## [v0.1.3](https://github.com/paralus/prompt/compare/v0.1.2...v0.1.3) (2024-06-18)
+
+### Added
+* update go version to 1.21 ([ab4763f](https://github.com/paralus/prompt/commit/ab4763f8a7252cd8bffecaa9fd9101b43fc317c2))
+
 ## Unreleased
 
 ## [0.1.2](https://github.com/paralus/prompt/compare/v0.1.1...v0.1.2) (2023-12-21)
