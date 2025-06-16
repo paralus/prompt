@@ -104,6 +104,15 @@ func NewIOExecutor(rw io.ReadWriter, rows, cols uint16, args []string, event *au
 			// Create a done channel to signal goroutines to stop
 			done := make(chan struct{})
 
+			// Handle cleanup on exit
+			defer func() {
+				close(done)
+				wg.Wait()
+				f.Close()
+				// Send a newline to ensure prompt is on a new line
+				rw.Write([]byte{'\r', '\n'})
+			}()
+
 			// Copy from PTY to websocket
 			go func() {
 				defer wg.Done()
@@ -162,14 +171,6 @@ func NewIOExecutor(rw io.ReadWriter, rows, cols uint16, args []string, event *au
 				_log.Infow("command exited with error", "error", err)
 			}
 
-			// Signal goroutines to stop
-			close(done)
-
-			// Wait for goroutines to finish
-			wg.Wait()
-
-			// Close PTY after goroutines are done
-			f.Close()
 			return
 		}
 
