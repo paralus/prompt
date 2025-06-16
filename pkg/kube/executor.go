@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/creack/pty"
 	"github.com/mattn/go-shellwords"
@@ -51,18 +52,36 @@ func NewIOExecutor(rw io.ReadWriter, rows, cols uint16, args []string, event *au
 
 		var execArgs []string
 
+		// Add kubectl flags first
+		for _, arg := range args {
+			if strings.TrimSpace(arg) != "" {
+				execArgs = append(execArgs, arg)
+			}
+		}
+
 		// appending kubectl commands to execute
 		p, err := shellwords.Parse(s)
 		if err != nil {
 			_log.Error("unable to parse command", zap.Error(err))
 			return
 		}
+
+		// Add all parsed arguments first
 		execArgs = append(execArgs, p...)
 
-		// appending default flags
-		for _, arg := range args {
-			if strings.TrimSpace(arg) != "" {
-				execArgs = append(execArgs, arg)
+		// Handle namespace flag specially - look for it in any position
+		for i := 0; i < len(execArgs); i++ {
+			if execArgs[i] == "-n" && i+1 < len(execArgs) {
+				// Move namespace flag and its value to the beginning of the command
+				// after the initial kubectl flags
+				nsFlag := execArgs[i]
+				nsValue := execArgs[i+1]
+				// Remove the flag and value from their current position
+				execArgs = append(execArgs[:i], execArgs[i+2:]...)
+				// Insert them after the initial kubectl flags
+				initialFlagsLen := len(args)
+				execArgs = append(execArgs[:initialFlagsLen], append([]string{nsFlag, nsValue}, execArgs[initialFlagsLen:]...)...)
+				break // Only handle the first occurrence of -n
 			}
 		}
 
@@ -83,20 +102,89 @@ func NewIOExecutor(rw io.ReadWriter, rows, cols uint16, args []string, event *au
 			var wg sync.WaitGroup
 			wg.Add(2)
 
-			go func() {
-				defer wg.Done()
-				_, err := io.Copy(rw, f)
-				_log.Infow("exited copy from pty", "error", err)
-			}()
-			go func() {
-				defer wg.Done()
-				_, err := io.Copy(f, rw)
-				_log.Infow("exited copy to pty", "error", err)
+			// Create a done channel to signal goroutines to stop
+			done := make(chan struct{})
+
+			// Handle cleanup on exit
+			defer func() {
+				// Signal goroutines to stop first
+				close(done)
+				// Wait for goroutines to finish
+				wg.Wait()
+				// Send exit sequence to the PTY
+				if f != nil {
+					// Send Ctrl-D to gracefully exit
+					f.Write([]byte{0x04})
+					// Give it a moment to process
+					time.Sleep(100 * time.Millisecond)
+					f.Close()
+				}
+				// Send a newline to ensure prompt is on a new line
+				rw.Write([]byte{'\r', '\n'})
 			}()
 
-			cmd.Wait()
-			f.Close()
-			wg.Wait()
+			// Copy from PTY to websocket
+			go func() {
+				defer wg.Done()
+				buf := make([]byte, 1024)
+				for {
+					select {
+					case <-done:
+						return
+					default:
+						n, err := f.Read(buf)
+						if err != nil {
+							// Don't log EOF or I/O errors as they're expected during cleanup
+							if err != io.EOF && !strings.Contains(err.Error(), "input/output error") {
+								_log.Infow("error reading from pty", "error", err)
+							}
+							return
+						}
+						if n > 0 {
+							if _, err := rw.Write(buf[:n]); err != nil {
+								_log.Infow("error writing to websocket", "error", err)
+								return
+							}
+						}
+					}
+				}
+			}()
+
+			// Copy from websocket to PTY
+			go func() {
+				defer wg.Done()
+				buf := make([]byte, 1024)
+				for {
+					select {
+					case <-done:
+						return
+					default:
+						n, err := rw.Read(buf)
+						if err != nil {
+							if err != io.EOF {
+								_log.Infow("error reading from websocket", "error", err)
+							}
+							return
+						}
+						if n > 0 {
+							if _, err := f.Write(buf[:n]); err != nil {
+								// Don't log I/O errors as they're expected during cleanup
+								if !strings.Contains(err.Error(), "input/output error") {
+									_log.Infow("error writing to pty", "error", err)
+								}
+								return
+							}
+						}
+					}
+				}
+			}()
+
+			// Wait for command to complete
+			err = cmd.Wait()
+			if err != nil {
+				_log.Infow("command exited with error", "error", err)
+			}
+
 			return
 		}
 
