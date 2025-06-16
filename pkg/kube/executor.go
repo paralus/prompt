@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/creack/pty"
 	"github.com/mattn/go-shellwords"
@@ -106,9 +107,18 @@ func NewIOExecutor(rw io.ReadWriter, rows, cols uint16, args []string, event *au
 
 			// Handle cleanup on exit
 			defer func() {
+				// Signal goroutines to stop first
 				close(done)
+				// Wait for goroutines to finish
 				wg.Wait()
-				f.Close()
+				// Send exit sequence to the PTY
+				if f != nil {
+					// Send Ctrl-D to gracefully exit
+					f.Write([]byte{0x04})
+					// Give it a moment to process
+					time.Sleep(100 * time.Millisecond)
+					f.Close()
+				}
 				// Send a newline to ensure prompt is on a new line
 				rw.Write([]byte{'\r', '\n'})
 			}()
@@ -124,7 +134,8 @@ func NewIOExecutor(rw io.ReadWriter, rows, cols uint16, args []string, event *au
 					default:
 						n, err := f.Read(buf)
 						if err != nil {
-							if err != io.EOF {
+							// Don't log EOF or I/O errors as they're expected during cleanup
+							if err != io.EOF && !strings.Contains(err.Error(), "input/output error") {
 								_log.Infow("error reading from pty", "error", err)
 							}
 							return
@@ -157,7 +168,10 @@ func NewIOExecutor(rw io.ReadWriter, rows, cols uint16, args []string, event *au
 						}
 						if n > 0 {
 							if _, err := f.Write(buf[:n]); err != nil {
-								_log.Infow("error writing to pty", "error", err)
+								// Don't log I/O errors as they're expected during cleanup
+								if !strings.Contains(err.Error(), "input/output error") {
+									_log.Infow("error writing to pty", "error", err)
+								}
 								return
 							}
 						}
