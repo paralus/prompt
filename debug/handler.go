@@ -71,11 +71,16 @@ func (h *debugHandler) getAuth(r *http.Request, ps httprouter.Params) (*reqAuth,
 		Account:      sd.GetAccount(),
 		Partner:      sd.GetPartner(),
 		Organization: sd.GetOrganization(),
-		ProjectID:    sd.GetProject().GetList()[0].GetProjectId(),
-		Project:      sd.GetProject().GetList()[0].GetProject(),
 		IsSSOUser:    sd.GetIsSsoUser(),
 		Username:     sd.GetUsername(),
 		Groups:       sd.GetGroups(),
+	}
+
+	// Check if project list exists and has items
+	projectList := sd.GetProject().GetList()
+	if len(projectList) > 0 {
+		auth.ProjectID = projectList[0].GetProjectId()
+		auth.Project = projectList[0].GetProject()
 	}
 
 	return auth, nil
