@@ -52,13 +52,6 @@ func NewIOExecutor(rw io.ReadWriter, rows, cols uint16, args []string, event *au
 
 		var execArgs []string
 
-		// Add kubectl flags first
-		for _, arg := range args {
-			if strings.TrimSpace(arg) != "" {
-				execArgs = append(execArgs, arg)
-			}
-		}
-
 		// appending kubectl commands to execute
 		p, err := shellwords.Parse(s)
 		if err != nil {
@@ -66,8 +59,15 @@ func NewIOExecutor(rw io.ReadWriter, rows, cols uint16, args []string, event *au
 			return
 		}
 
-		// Add all parsed arguments first
+		// Add command first
 		execArgs = append(execArgs, p...)
+
+		// Add kubectl flags after the command
+		for _, arg := range args {
+			if strings.TrimSpace(arg) != "" {
+				execArgs = append(execArgs, arg)
+			}
+		}
 
 		// Handle namespace flag specially - look for it in any position
 		for i := 0; i < len(execArgs); i++ {
@@ -78,9 +78,8 @@ func NewIOExecutor(rw io.ReadWriter, rows, cols uint16, args []string, event *au
 				nsValue := execArgs[i+1]
 				// Remove the flag and value from their current position
 				execArgs = append(execArgs[:i], execArgs[i+2:]...)
-				// Insert them after the initial kubectl flags
-				initialFlagsLen := len(args)
-				execArgs = append(execArgs[:initialFlagsLen], append([]string{nsFlag, nsValue}, execArgs[initialFlagsLen:]...)...)
+				// Insert them after the command name
+				execArgs = append(execArgs[:1], append([]string{nsFlag, nsValue}, execArgs[1:]...)...)
 				break // Only handle the first occurrence of -n
 			}
 		}
@@ -113,8 +112,8 @@ func NewIOExecutor(rw io.ReadWriter, rows, cols uint16, args []string, event *au
 				wg.Wait()
 				// Send exit sequence to the PTY
 				if f != nil {
-					// Send Ctrl-D to gracefully exit
-					f.Write([]byte{0x04})
+					// Send exit command to the shell
+					f.Write([]byte("exit\n"))
 					// Give it a moment to process
 					time.Sleep(100 * time.Millisecond)
 					f.Close()
