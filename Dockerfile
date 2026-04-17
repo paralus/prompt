@@ -6,7 +6,7 @@ COPY . /build
 WORKDIR /build
 RUN go build -ldflags "-s" github.com/paralus/prompt
 
-FROM alpine:latest as runtime
+FROM alpine:3.23.4 as runtime
 LABEL description="Run container"
 
 COPY --from=build /build/prompt /usr/bin/prompt
